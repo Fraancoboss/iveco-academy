@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  Home,
   BookOpen,
   TrendingUp,
-  ClipboardCheck,
-  Calendar,
-  FileText,
-  MessageSquare,
-  User,
   Hand,
   Clock,
 } from "lucide-react";
 import { DashboardLayout } from "../components/ui/DashboardLayout.js";
 import { KpiCard } from "../components/ui/KpiCard.js";
 import { ChartCard } from "../components/ui/ChartCard.js";
+import { getStudentSidebarSections } from "./studentSidebar.js";
 import styles from "./StudentHome.module.css";
 
 interface ModuleProgress {
@@ -88,20 +83,7 @@ export function StudentHome() {
 
   const firstName = data.studentName.split(" ")[0];
 
-  const sidebarSections = [
-    {
-      items: [
-        { icon: <Home size={16} />, label: "Inicio", to: `/student/${id}`, active: true },
-        { icon: <BookOpen size={16} />, label: "Mis cursos", to: "#" },
-        { icon: <TrendingUp size={16} />, label: "Mi progreso", to: `/student/${id}/dashboard` },
-        { icon: <ClipboardCheck size={16} />, label: "Evaluaciones", to: "#" },
-        { icon: <Calendar size={16} />, label: "Calendario", to: "#" },
-        { icon: <FileText size={16} />, label: "Recursos", to: "#" },
-        { icon: <MessageSquare size={16} />, label: "Mensajes", to: "#" },
-        { icon: <User size={16} />, label: "Perfil", to: "#" },
-      ],
-    },
-  ];
+  const sidebarSections = getStudentSidebarSections(id!);
 
   const nextEvalLabel = data.nextEvaluation
     ? (() => {

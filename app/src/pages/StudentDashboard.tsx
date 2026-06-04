@@ -16,12 +16,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import {
-  BarChart3,
-  Calendar,
-  ClipboardCheck,
-  BookOpen,
-  GraduationCap,
-  FileText,
   TrendingUp,
   Trophy,
   CheckCircle,
@@ -34,6 +28,7 @@ import { DashboardLayout } from "../components/ui/DashboardLayout.js";
 import { KpiCard } from "../components/ui/KpiCard.js";
 import { ChartCard } from "../components/ui/ChartCard.js";
 import { DateEventItem } from "../components/ui/DateEventItem.js";
+import { getStudentSidebarSections } from "./studentSidebar.js";
 import styles from "./StudentDashboard.module.css";
 
 interface WeeklyData {
@@ -153,24 +148,7 @@ export function StudentDashboard() {
 
   const workshopGrade = lastWorkshopGrade(data.weeklyData);
 
-  const sidebarSections = [
-    {
-      label: "Mi Panel",
-      items: [
-        { icon: <BarChart3 size={16} />, label: "Dashboard", to: `/student/${id}`, active: true },
-        { icon: <Calendar size={16} />, label: "Calendario", to: "#" },
-        { icon: <ClipboardCheck size={16} />, label: "Evaluaciones", to: "#" },
-        { icon: <BookOpen size={16} />, label: "Material", to: "#" },
-      ],
-    },
-    {
-      label: "Programa",
-      items: [
-        { icon: <GraduationCap size={16} />, label: data.courseName || "Curso", to: "#" },
-        { icon: <FileText size={16} />, label: data.editionName, badge: `${data.weeklyData.length} sem` },
-      ],
-    },
-  ];
+  const sidebarSections = getStudentSidebarSections(id!);
 
   return (
     <DashboardLayout
