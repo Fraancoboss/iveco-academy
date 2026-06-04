@@ -137,6 +137,45 @@
   text-decoration: underline;
 }
 
+/* ── CTA band ────────────────────────────────── */
+.cta {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-base);
+}
+
+.ctaTitle {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.ctaSub {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  max-width: 520px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.ctaBtn {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  background: #2563EB;
+  color: white;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.ctaBtn:hover {
+  background: #1D4ED8;
+  color: white;
+}
+
 /* ── Footer ──────────────────────────────────── */
 .footer {
   text-align: center;

@@ -120,6 +120,17 @@ export function GeneralLanding() {
         </div>
       </section>
 
+      {/* CTA */}
+      <section className={styles.cta}>
+        <h2 className={styles.ctaTitle}>Forma parte de la próxima edición</h2>
+        <p className={styles.ctaSub}>
+          Inscríbete en la Escuela de Mecánicos IVECO y da el siguiente paso en tu carrera profesional.
+        </p>
+        <Link to="/inscripcion" className={styles.ctaBtn}>
+          Inscribirme ahora
+        </Link>
+      </section>
+
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerLogo}>
