@@ -18,7 +18,7 @@ export function GeneralLanding() {
       {/* Nav */}
       <nav className={styles.nav}>
         <Link to="/" className={styles.logo}>
-          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 32, width: "auto" }} />
+          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 44, width: "auto" }} />
         </Link>
         <div className={styles.navLinks}>
           <Link to="/school" className={styles.navLink}>Escuela</Link>
@@ -153,7 +153,7 @@ export function GeneralLanding() {
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerLogo}>
-          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 32, width: "auto" }} />
+          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 44, width: "auto" }} />
         </div>
         <div className={styles.footerText}>
           Prototipo v0.2.0-demo · Desarrollado por Quetzy · 2026
