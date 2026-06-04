@@ -34,4 +34,10 @@ This is a presale prototype. Security measures are appropriate for a demo enviro
 
 ## Audit Results
 
-_To be populated at release time._
+**Date**: 2026-06-04
+**Command**: `pnpm audit --prod`
+**Result**: No known vulnerabilities found
+
+- `pnpm why axios` → empty (not in dependency tree)
+- `pnpm why node-ipc` → empty (not in dependency tree)
+- `.npmrc` directives verified: minimum-release-age, ignore-scripts, save-exact
