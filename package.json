@@ -1,0 +1,17 @@
+{
+  "name": "iveco-academy",
+  "version": "0.1.0-demo",
+  "private": true,
+  "description": "IVECO ACADEMY — Training management platform prototype",
+  "scripts": {
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:create": "docker exec iveco-academy-mssql /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$MSSQL_SA_PASSWORD\" -C -Q \"IF DB_ID('iveco_academy') IS NULL CREATE DATABASE iveco_academy\"",
+    "db:migrate": "pnpm --filter db exec prisma migrate deploy",
+    "db:seed": "pnpm --filter db exec prisma db seed",
+    "db:views": "pnpm --filter db run views:apply",
+    "db:reset": "docker compose down -v && docker compose up -d --wait && pnpm db:create && pnpm db:migrate && pnpm db:views && pnpm db:seed",
+    "dev:api": "pnpm --filter api dev",
+    "dev:app": "pnpm --filter app dev"
+  }
+}
