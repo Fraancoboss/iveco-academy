@@ -1,7 +1,8 @@
+import type { ReactNode } from "react";
 import styles from "./KpiCard.module.css";
 
 interface KpiCardProps {
-  icon: string;
+  icon: ReactNode;
   label: string;
   value: string;
   unit?: string;
@@ -13,7 +14,7 @@ export function KpiCard({ icon, label, value, unit, subtitle, delta }: KpiCardPr
   return (
     <div className={styles.card}>
       <div className={styles.iconCircle}>
-        <span>{icon}</span>
+        {icon}
       </div>
       <div className={styles.content}>
         <div className={styles.label}>{label}</div>

@@ -13,17 +13,16 @@
 }
 
 .logo {
-  padding: 1.5rem 1.25rem;
-  font-size: var(--text-lg);
-  font-weight: 700;
+  padding: 1.25rem 1.25rem;
   display: flex;
   align-items: center;
-  gap: 0.15rem;
 }
 
-.logoIveco { color: var(--text-primary); }
-.logoSlash { color: var(--accent-teal); font-weight: 300; margin: 0 2px; }
-.logoAcademy { color: var(--accent-teal); }
+.logoImg {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+}
 
 .nav {
   flex: 1;
@@ -71,9 +70,11 @@
 }
 
 .icon {
-  font-size: 1.1rem;
   width: 1.25rem;
-  text-align: center;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 

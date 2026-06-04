@@ -18,17 +18,15 @@
 }
 
 .logo {
-  font-size: var(--text-lg);
-  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 0.15rem;
   text-decoration: none;
 }
 
-.logoIveco { color: var(--text-primary); }
-.logoSlash { color: var(--accent-teal); font-weight: 300; margin: 0 2px; }
-.logoAcademy { color: var(--accent-teal); }
+.logoImg {
+  height: 32px;
+  width: auto;
+}
 
 .navLinks {
   display: flex;
@@ -195,8 +193,8 @@
 }
 
 .featureIcon {
-  font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: var(--accent-primary-light);
 }
 
 .featureTitle {
@@ -255,8 +253,8 @@
 }
 
 .roleIcon {
-  font-size: 2rem;
   margin-bottom: 0.75rem;
+  color: var(--accent-primary-light);
 }
 
 .roleTitle {

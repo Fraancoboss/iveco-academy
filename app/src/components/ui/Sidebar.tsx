@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import styles from "./Sidebar.module.css";
 
 export interface SidebarItem {
-  icon: string;
+  icon: ReactNode;
   label: string;
   to?: string;
   badge?: number | string;
@@ -24,9 +24,7 @@ export function Sidebar({ sections, footer }: SidebarProps) {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
-        <span className={styles.logoIveco}>IVECO</span>
-        <span className={styles.logoSlash}>/</span>
-        <span className={styles.logoAcademy}>ACADEMY</span>
+        <img src="/iveco-academy-logo.png" alt="IVECO Academy" className={styles.logoImg} />
       </div>
 
       <nav className={styles.nav}>
