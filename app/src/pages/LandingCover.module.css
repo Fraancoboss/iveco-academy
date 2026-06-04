@@ -1,0 +1,537 @@
+/* ═══════════════════════════════════════════════
+   LANDING COVER — "Hoja 1" pixel-faithful
+   ═══════════════════════════════════════════════ */
+
+.cover {
+  min-height: 100vh;
+  background: #0A1220;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Background image (right 55-60%) ─────────── */
+.bgImage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bgImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Horizontal gradient: solid blue → transparent */
+.bgOverlayH {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #0A1220 0%,
+    #0A1220 10%,
+    rgba(10, 18, 32, 0.88) 28%,
+    rgba(10, 18, 32, 0.52) 48%,
+    rgba(10, 18, 32, 0.18) 68%,
+    rgba(10, 18, 32, 0.05) 100%
+  );
+}
+
+/* Vertical gradient: subtle bottom darkening */
+.bgOverlayV {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 72%,
+    rgba(10, 18, 32, 0.6) 88%,
+    rgba(10, 18, 32, 0.92) 100%
+  );
+}
+
+/* ── ZONE A — Hero ───────────────────────────── */
+.heroWrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 56px;
+  box-sizing: border-box;
+}
+
+.heroInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 640px;
+  width: 100%;
+  padding-top: 40px;
+}
+
+/* Logo typographic */
+.logoBlock {
+  margin-bottom: 3rem;
+}
+
+.logoIveco {
+  font-size: 28px;
+  font-weight: 800;
+  color: #F8FAFC;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.logoAcademy {
+  font-size: 15px;
+  font-weight: 600;
+  color: #94A3B8;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* Hero text */
+.heroText {
+  margin-bottom: 3.5rem;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2DD4BF;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.eyebrowLine {
+  width: 36px;
+  height: 3px;
+  background: #2DD4BF;
+  border-radius: 2px;
+  margin: 14px 0;
+}
+
+.h1 {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.08;
+  margin: 0 0 1.25rem 0;
+  letter-spacing: 0.02em;
+}
+
+.h1White {
+  color: #F8FAFC;
+}
+
+.h1Gradient {
+  background: linear-gradient(90deg, #3B82F6 0%, #22D3EE 85%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroParagraph {
+  font-size: 16.5px;
+  color: #CBD5E1;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 520px;
+}
+
+.heroHighlight {
+  color: #2DD4BF;
+  font-weight: 600;
+}
+
+/* ── Features row (bottom of Zone A) ─────────── */
+.featuresRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  max-width: 640px;
+  padding-bottom: 2rem;
+}
+
+.featureItem {
+  flex: 1;
+  padding: 0 1rem;
+}
+
+.featureItem:first-child {
+  padding-left: 0;
+}
+
+.featureItem:last-child {
+  padding-right: 0;
+}
+
+.featureSep {
+  width: 1px;
+  height: 72px;
+  background: rgba(148, 163, 184, 0.18);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.featureTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #F8FAFC;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  margin: 0.6rem 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.featureDesc {
+  font-size: 11.5px;
+  color: #94A3B8;
+  line-height: 1.5;
+}
+
+/* Icon color classes */
+.iconTeal {
+  color: #2DD4BF;
+}
+
+.iconBlue {
+  color: #3B82F6;
+}
+
+/* ── ZONE B — Quote + Mission band ───────────── */
+.bandB {
+  position: relative;
+  z-index: 2;
+  background: #0E1B30;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  padding: 36px 0;
+}
+
+.bandBInner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 56px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Quote block — left */
+.quoteBlock {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+.quoteIcon {
+  color: #2563EB;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transform: scaleX(-1);
+}
+
+.quoteText {
+  font-size: 18.5px;
+  line-height: 1.55;
+}
+
+.quoteWhite {
+  color: #F8FAFC;
+}
+
+.quoteTeal {
+  color: #2DD4BF;
+  font-weight: 600;
+}
+
+.quoteBlue {
+  color: #3B82F6;
+  font-weight: 600;
+}
+
+/* Separator */
+.bandBSep {
+  width: 1px;
+  height: 64px;
+  background: rgba(148, 163, 184, 0.15);
+  flex-shrink: 0;
+}
+
+/* Mission block — right */
+.missionBlock {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-left: 2.5rem;
+}
+
+.missionCircle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(59, 130, 235, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.missionText {
+  flex: 1;
+}
+
+.missionLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2DD4BF;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.missionDesc {
+  font-size: 14px;
+  color: #CBD5E1;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── ZONE C — Values band ────────────────────── */
+.bandC {
+  position: relative;
+  z-index: 2;
+  background: #0A1220;
+  border-top: 1px solid rgba(148, 163, 184, 0.08);
+  padding: 26px 0;
+}
+
+.bandCInner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 56px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.valueItem {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+
+.valueItem:first-child {
+  padding-left: 0;
+}
+
+.valueCircle {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(45, 212, 191, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.valueText {
+  flex: 1;
+}
+
+.valueTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: #F8FAFC;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.valueDesc {
+  font-size: 11px;
+  color: #94A3B8;
+  line-height: 1.5;
+}
+
+.valueSep {
+  width: 1px;
+  height: 48px;
+  background: rgba(148, 163, 184, 0.12);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.ivecoLogo {
+  font-size: 30px;
+  font-weight: 800;
+  color: #F8FAFC;
+  letter-spacing: 0.08em;
+  padding-left: 2rem;
+  white-space: nowrap;
+}
+
+/* ── Subtle fade-in animation ────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.heroText {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+.featuresRow {
+  animation: fadeIn 0.3s ease-out 0.1s both;
+}
+
+/* ── Responsive ──────────────────────────────── */
+
+/* 1024–1279px */
+@media (max-width: 1279px) {
+  .h1 {
+    font-size: 44px;
+  }
+
+  .heroWrapper {
+    padding: 0 36px;
+  }
+
+  .bandBInner,
+  .bandCInner {
+    padding: 0 36px;
+  }
+
+  .featuresRow {
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 480px;
+  }
+
+  .featureItem {
+    flex: 0 0 calc(50% - 1rem);
+    padding: 0;
+  }
+
+  .featureSep {
+    display: none;
+  }
+}
+
+/* <768px mobile */
+@media (max-width: 767px) {
+  .cover {
+    grid-template-rows: auto auto auto;
+  }
+
+  .bgImage {
+    position: relative;
+    width: 100%;
+    height: 40vh;
+  }
+
+  .bgOverlayH {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 50%,
+      rgba(10, 18, 32, 0.85) 80%,
+      #0A1220 100%
+    );
+  }
+
+  .heroWrapper {
+    padding: 1.5rem 1.25rem 1rem;
+  }
+
+  .heroInner {
+    max-width: 100%;
+    padding-top: 0;
+  }
+
+  .logoBlock {
+    margin-bottom: 1.5rem;
+  }
+
+  .h1 {
+    font-size: 32px;
+  }
+
+  .heroParagraph {
+    font-size: 15px;
+  }
+
+  .featuresRow {
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 100%;
+  }
+
+  .featureItem {
+    flex: 0 0 calc(50% - 0.5rem);
+    padding: 0;
+  }
+
+  .featureSep {
+    display: none;
+  }
+
+  .bandBInner {
+    flex-direction: column;
+    padding: 0 1.25rem;
+    gap: 1.5rem;
+  }
+
+  .quoteBlock {
+    padding-right: 0;
+  }
+
+  .bandBSep {
+    width: 100%;
+    height: 1px;
+  }
+
+  .missionBlock {
+    padding-left: 0;
+  }
+
+  .bandCInner {
+    flex-wrap: wrap;
+    padding: 0 1.25rem;
+    gap: 1rem;
+  }
+
+  .valueItem {
+    flex: 0 0 calc(50% - 0.5rem);
+    padding: 0;
+  }
+
+  .valueSep {
+    display: none;
+  }
+
+  .ivecoLogo {
+    flex: 0 0 100%;
+    text-align: center;
+    padding: 0.5rem 0 0;
+  }
+}

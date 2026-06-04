@@ -27,7 +27,7 @@ export function SchoolLanding() {
       {/* Nav */}
       <nav className={styles.nav}>
         <div className={styles.logo}>
-          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 32, width: "auto" }} />
+          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 44, width: "auto" }} />
         </div>
         <div className={styles.navLinks}>
           <Link to="/school" className={styles.navLink}>Escuela</Link>

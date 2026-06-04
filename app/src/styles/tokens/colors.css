@@ -1,10 +1,10 @@
 :root {
   /* Base backgrounds */
-  --bg-base: #0A1220;
-  --bg-base-alt: #0D1726;
-  --bg-surface: #101D31;
-  --bg-surface-alt: #13233B;
-  --bg-surface-hover: #182D4A;
+  --bg-base: #060D18;
+  --bg-base-alt: #081120;
+  --bg-surface: #0B1628;
+  --bg-surface-alt: #0E1C33;
+  --bg-surface-hover: #13253F;
   --border-subtle: rgba(148, 163, 184, 0.12);
   --border-medium: rgba(148, 163, 184, 0.20);
 
