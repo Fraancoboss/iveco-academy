@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Note: MSSQL doesn't support Prisma enums ───────────
+// Enum values are enforced via Zod schemas at application layer.
+// UserRole: STUDENT, TRAINER, WORKSHOP_LEAD, DEALER_MANAGER, IVECO_ADMIN
+// ApplicationStatus: RECEIVED, IN_REVIEW, APPROVED, REJECTED, WAITLISTED
+// WeekType: TRAINING, WORKSHOP
+// EvalType: TRAINING, WORKSHOP
+
+// ─── Models ──────────────────────────────────────────────
+
+model Dealer {
+  id   String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  name String @db.NVarChar(200)
+  code String @unique @db.NVarChar(50)
+  city String @db.NVarChar(100)
+
+  users        User[]
+  applications Application[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("dealers")
+}
+
+model User {
+  id       String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  email    String @unique @db.NVarChar(255)
+  name     String @db.NVarChar(200)
+  phone    String? @db.NVarChar(50)
+  role     String @db.NVarChar(50)
+  dealerId String @db.UniqueIdentifier
+
+  dealer      Dealer       @relation(fields: [dealerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  enrollments Enrollment[]
+  evaluations Evaluation[] @relation("evaluator")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model School {
+  id       String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  name     String @db.NVarChar(200)
+  location String @db.NVarChar(200)
+
+  courses Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("schools")
+}
+
+model Course {
+  id          String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  schoolId    String @db.UniqueIdentifier
+  name        String @db.NVarChar(200)
+  description String @db.NVarChar(Max)
+
+  school   School    @relation(fields: [schoolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  editions Edition[]
+  modules  Module[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("courses")
+}
+
+model Edition {
+  id        String   @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  courseId   String   @db.UniqueIdentifier
+  name      String   @db.NVarChar(200)
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  capacity  Int      @default(12)
+
+  course       Course        @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  applications Application[]
+  enrollments  Enrollment[]
+  weeks        Week[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("editions")
+}
+
+model Module {
+  id       String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  courseId  String @db.UniqueIdentifier
+  name     String @db.NVarChar(200)
+  order    Int
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  weeks  Week[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("modules")
+}
+
+model Application {
+  id             String   @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  candidateName  String   @db.NVarChar(200)
+  candidateEmail String   @db.NVarChar(255)
+  candidatePhone String?  @db.NVarChar(50)
+  dealerId       String   @db.UniqueIdentifier
+  editionId      String   @db.UniqueIdentifier
+  status         String   @default("RECEIVED") @db.NVarChar(50)
+  submittedAt    DateTime @default(now())
+  reviewedBy     String?  @db.UniqueIdentifier
+  reviewedAt     DateTime?
+
+  dealer     Dealer                    @relation(fields: [dealerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  edition    Edition                   @relation(fields: [editionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  enrollment Enrollment?
+  history    ApplicationStatusHistory[]
+
+  @@map("applications")
+}
+
+model ApplicationStatusHistory {
+  id            String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  applicationId String @db.UniqueIdentifier
+  fromStatus    String @db.NVarChar(50)
+  toStatus      String @db.NVarChar(50)
+  changedBy     String @db.UniqueIdentifier
+  changedAt     DateTime @default(now())
+  notes         String?  @db.NVarChar(Max)
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("application_status_history")
+}
+
+model Enrollment {
+  id            String   @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  userId        String   @db.UniqueIdentifier
+  editionId     String   @db.UniqueIdentifier
+  applicationId String   @unique @db.UniqueIdentifier
+  enrolledAt    DateTime @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  edition     Edition      @relation(fields: [editionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  application Application  @relation(fields: [applicationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  evaluations Evaluation[]
+  attendances Attendance[]
+
+  @@unique([userId, editionId])
+  @@map("enrollments")
+}
+
+model Week {
+  id         String @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  editionId  String @db.UniqueIdentifier
+  weekNumber Int
+  weekType   String @db.NVarChar(50)
+  moduleId   String? @db.UniqueIdentifier
+  startDate  DateTime @db.Date
+  endDate    DateTime @db.Date
+
+  edition     Edition      @relation(fields: [editionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  module      Module?      @relation(fields: [moduleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  evaluations Evaluation[]
+  attendances Attendance[]
+
+  @@unique([editionId, weekNumber])
+  @@map("weeks")
+}
+
+model Evaluation {
+  id             String   @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  enrollmentId   String   @db.UniqueIdentifier
+  weekId         String   @db.UniqueIdentifier
+  evaluatorId    String   @db.UniqueIdentifier
+  evalType       String   @db.NVarChar(50)
+  punctuality    Decimal? @db.Decimal(4, 2)
+  attention      Decimal? @db.Decimal(4, 2)
+  participation  Decimal? @db.Decimal(4, 2)
+  documentation  Decimal? @db.Decimal(4, 2)
+  dexterity      Decimal? @db.Decimal(4, 2)
+  problemSolving Decimal? @db.Decimal(4, 2)
+  workshopGrade  Decimal? @db.Decimal(4, 2)
+  comments       String?  @db.NVarChar(Max)
+  evaluatedAt    DateTime @default(now())
+
+  enrollment  Enrollment           @relation(fields: [enrollmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  week        Week                 @relation(fields: [weekId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  evaluator   User                 @relation("evaluator", fields: [evaluatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  moduleItems EvaluationModuleItem[]
+
+  @@unique([enrollmentId, weekId])
+  @@map("evaluations")
+}
+
+model EvaluationModuleItem {
+  id           String  @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  evaluationId String  @db.UniqueIdentifier
+  itemName     String  @db.NVarChar(200)
+  score        Decimal @db.Decimal(4, 2)
+
+  evaluation Evaluation @relation(fields: [evaluationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("evaluation_module_items")
+}
+
+model Attendance {
+  id           String  @id @default(dbgenerated("NEWID()")) @db.UniqueIdentifier
+  enrollmentId String  @db.UniqueIdentifier
+  weekId       String  @db.UniqueIdentifier
+  present      Boolean @default(true)
+  notes        String? @db.NVarChar(Max)
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  week       Week       @relation(fields: [weekId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([enrollmentId, weekId])
+  @@map("attendances")
+}
