@@ -1,0 +1,1 @@
+{"root":["./src/vite-env.d.ts","./src/main.tsx","./src/components/card.tsx","./src/components/nav.tsx","./src/components/watermark.tsx","./src/pages/directordashboard.tsx","./src/pages/studentdashboard.tsx"],"version":"5.8.3"}
