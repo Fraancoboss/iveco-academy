@@ -34,10 +34,15 @@ This is a presale prototype. Security measures are appropriate for a demo enviro
 
 ## Audit Results
 
-**Date**: 2026-06-04
+### v0.2.0-demo (2026-06-04)
+
 **Command**: `pnpm audit --prod`
 **Result**: No known vulnerabilities found
 
 - `pnpm why axios` → empty (not in dependency tree)
 - `pnpm why node-ipc` → empty (not in dependency tree)
 - `.npmrc` directives verified: minimum-release-age, ignore-scripts, save-exact
+
+### v0.1.0-demo (2026-06-04)
+
+**Result**: No known vulnerabilities found (after updating hono, @hono/node-server, react-router-dom)

@@ -13,12 +13,12 @@ import {
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
-  BarChart,
-  Bar,
   ResponsiveContainer,
 } from "recharts";
-import { Nav } from "../components/Nav.js";
-import { Card, KpiCard } from "../components/Card.js";
+import { DashboardLayout } from "../components/ui/DashboardLayout.js";
+import { KpiCard } from "../components/ui/KpiCard.js";
+import { ChartCard } from "../components/ui/ChartCard.js";
+import { DateEventItem } from "../components/ui/DateEventItem.js";
 import styles from "./StudentDashboard.module.css";
 
 interface WeeklyData {
@@ -36,11 +36,36 @@ interface WeeklyData {
   workshopGrade: number | null;
 }
 
+interface ModuleAvg {
+  moduleName: string;
+  studentAvg: number | null;
+}
+
+interface CourseModuleAvg {
+  moduleName: string;
+  courseAvg: number | null;
+}
+
+interface UpcomingClass {
+  weekId: string;
+  weekNumber: number;
+  weekType: string;
+  moduleName: string | null;
+  startDate: string;
+  endDate: string;
+}
+
+interface AvailableEdition {
+  editionId: string;
+  editionName: string;
+}
+
 interface DashboardData {
   studentId: string;
   studentName: string;
   editionId: string;
   editionName: string;
+  courseName: string;
   overallAvg: number | null;
   ranking: number | null;
   totalStudents: number;
@@ -54,6 +79,27 @@ interface DashboardData {
     dexterity: number | null;
     problemSolving: number | null;
   };
+  moduleAvgs: ModuleAvg[];
+  courseModuleAvgs: CourseModuleAvg[];
+  upcomingClasses: UpcomingClass[];
+  availableEditions: AvailableEdition[];
+}
+
+const MONTH_NAMES = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+
+function weekBarGradient(score: number): string {
+  if (score >= 8) return "linear-gradient(90deg, #14B8A6, #22D3EE)";
+  if (score >= 6) return "linear-gradient(90deg, #2563EB, #3B82F6)";
+  if (score >= 5) return "linear-gradient(90deg, #F59E0B, #FBBF24)";
+  return "linear-gradient(90deg, #EF4444, #F87171)";
+}
+
+// Last workshop grade from weekly data
+function lastWorkshopGrade(weeklyData: WeeklyData[]): number | null {
+  for (let i = weeklyData.length - 1; i >= 0; i--) {
+    if (weeklyData[i].workshopGrade != null) return weeklyData[i].workshopGrade;
+  }
+  return null;
 }
 
 export function StudentDashboard() {
@@ -65,134 +111,400 @@ export function StudentDashboard() {
     if (!id) return;
     fetch(`/api/students/${id}/dashboard`)
       .then((r) => {
-        if (!r.ok) throw new Error("Student not found");
+        if (!r.ok) throw new Error("Alumno no encontrado");
         return r.json();
       })
       .then(setData)
       .catch((e) => setError(e.message));
   }, [id]);
 
-  if (error) return <div className={styles.page}><Nav /><p className={styles.error}>{error}</p></div>;
-  if (!data) return <div className={styles.page}><Nav /><p className={styles.loading}>Cargando...</p></div>;
+  if (error) return <div className={styles.error}>{error}</div>;
+  if (!data) return <div className={styles.loading}>Cargando dashboard...</div>;
 
-  const radarData = [
-    { subject: "Puntualidad", value: data.behaviorAvgs.punctuality ?? 0, fullMark: 10 },
-    { subject: "Atención", value: data.behaviorAvgs.attention ?? 0, fullMark: 10 },
-    { subject: "Participación", value: data.behaviorAvgs.participation ?? 0, fullMark: 10 },
-    { subject: "Documentación", value: data.behaviorAvgs.documentation ?? 0, fullMark: 10 },
-    { subject: "Destreza", value: data.behaviorAvgs.dexterity ?? 0, fullMark: 10 },
-    { subject: "Resolución", value: data.behaviorAvgs.problemSolving ?? 0, fullMark: 10 },
-  ];
+  // Radar data: 5 modules (from API moduleAvgs)
+  const radarData = data.moduleAvgs.map((m, i) => {
+    const courseModule = data.courseModuleAvgs.find((cm) => cm.moduleName === m.moduleName);
+    return {
+      module: m.moduleName.length > 18 ? m.moduleName.substring(0, 16) + "…" : m.moduleName,
+      alumno: m.studentAvg != null ? Number(m.studentAvg.toFixed(1)) : 0,
+      curso: courseModule?.courseAvg != null ? Number(courseModule.courseAvg.toFixed(1)) : 0,
+      fullMark: 10,
+    };
+  });
 
+  // Weekly line chart
   const weeklyChartData = data.weeklyData.map((w) => ({
     name: `S${w.weekNumber}`,
     alumno: w.weekAvg != null ? Number(w.weekAvg.toFixed(2)) : null,
     curso: w.courseWeekAvg != null ? Number(w.courseWeekAvg.toFixed(2)) : null,
-    tipo: w.weekType,
   }));
 
-  const moduleBarData = data.weeklyData
-    .filter((w) => w.weekType === "TRAINING")
-    .map((w) => ({
-      name: `S${w.weekNumber}`,
-      punctuality: w.punctuality,
-      attention: w.attention,
-      participation: w.participation,
-      documentation: w.documentation,
-      dexterity: w.dexterity,
-      problemSolving: w.problemSolving,
-    }));
+  const workshopGrade = lastWorkshopGrade(data.weeklyData);
+
+  const sidebarSections = [
+    {
+      label: "Mi Panel",
+      items: [
+        { icon: "📊", label: "Dashboard", to: `/student/${id}`, active: true },
+        { icon: "📅", label: "Calendario", to: "#" },
+        { icon: "📝", label: "Evaluaciones", to: "#" },
+        { icon: "📚", label: "Material", to: "#" },
+      ],
+    },
+    {
+      label: "Programa",
+      items: [
+        { icon: "🎓", label: data.courseName || "Curso", to: "#" },
+        { icon: "📋", label: data.editionName, badge: `${data.weeklyData.length} sem` },
+      ],
+    },
+  ];
 
   return (
-    <div className={styles.page}>
-      <Nav />
+    <DashboardLayout
+      sidebarSections={sidebarSections}
+      viewLabel="Panel del Alumno"
+      userName={data.studentName}
+      userRole="Alumno"
+      sidebarFooter={
+        data.availableEditions.length > 1 ? (
+          <select
+            style={{
+              width: "100%",
+              background: "var(--bg-surface-alt)",
+              color: "var(--text-primary)",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-sm)",
+              padding: "0.5rem",
+              fontSize: "var(--text-xs)",
+            }}
+            value={data.editionId}
+            onChange={(e) => {
+              window.location.href = `/student/${id}?editionId=${e.target.value}`;
+            }}
+          >
+            {data.availableEditions.map((ed) => (
+              <option key={ed.editionId} value={ed.editionId}>
+                {ed.editionName}
+              </option>
+            ))}
+          </select>
+        ) : undefined
+      }
+    >
+      {/* Header */}
       <div className={styles.header}>
-        <h1>{data.studentName}</h1>
+        <span className={styles.studentName}>{data.studentName}</span>
         <span className={styles.editionBadge}>{data.editionName}</span>
       </div>
 
+      {/* KPI Row */}
       <div className={styles.kpiRow}>
         <KpiCard
+          icon="📈"
           label="Promedio General"
-          value={data.overallAvg != null ? data.overallAvg.toFixed(2) : "—"}
-          color={data.overallAvg != null && data.overallAvg < 5 ? "var(--color-danger)" : "var(--color-primary)"}
+          value={data.overallAvg != null ? data.overallAvg.toFixed(1) : "—"}
+          unit="/10"
+          subtitle={`Objetivo: 7.0`}
+          delta={
+            data.weeklyData.length >= 2
+              ? (() => {
+                  const last = data.weeklyData[data.weeklyData.length - 1]?.weekAvg;
+                  const prev = data.weeklyData[data.weeklyData.length - 2]?.weekAvg;
+                  if (last != null && prev != null) {
+                    const diff = last - prev;
+                    return { value: `${Math.abs(diff).toFixed(1)} vs sem. anterior`, positive: diff >= 0 };
+                  }
+                  return null;
+                })()
+              : null
+          }
         />
         <KpiCard
+          icon="🏆"
           label="Ranking"
-          value={data.ranking != null ? `#${data.ranking} de ${data.totalStudents}` : "—"}
+          value={data.ranking != null ? `#${data.ranking}` : "—"}
+          unit={`de ${data.totalStudents}`}
+          subtitle={data.editionName}
         />
         <KpiCard
+          icon="✅"
           label="Asistencia"
-          value={data.attendancePct != null ? `${data.attendancePct.toFixed(0)}%` : "—"}
-          color={data.attendancePct != null && data.attendancePct < 80 ? "var(--color-warning)" : "var(--color-success)"}
+          value={data.attendancePct != null ? `${data.attendancePct.toFixed(0)}` : "—"}
+          unit="%"
+          subtitle="Mínimo requerido: 80%"
+        />
+        <KpiCard
+          icon="🔧"
+          label="Nota Taller"
+          value={workshopGrade != null ? workshopGrade.toFixed(1) : "—"}
+          unit="/10"
+          subtitle="Última evaluación taller"
         />
       </div>
 
-      <div className={styles.chartGrid}>
-        <Card title="Comportamiento (Radar)">
-          <ResponsiveContainer width="100%" height={300}>
-            <RadarChart data={radarData}>
-              <PolarGrid />
-              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12 }} />
-              <PolarRadiusAxis angle={30} domain={[0, 10]} tick={{ fontSize: 10 }} />
-              <Radar
-                name="Alumno"
-                dataKey="value"
-                stroke="var(--color-primary)"
-                fill="var(--color-primary)"
-                fillOpacity={0.3}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-        </Card>
+      {/* Main content grid */}
+      <div className={styles.mainGrid}>
+        {/* Left: Charts column */}
+        <div className={styles.chartsColumn}>
+          {/* Line + Radar row */}
+          <div className={styles.chartsRow}>
+            <ChartCard title="Evolución Semanal">
+              <ResponsiveContainer width="100%" height={240}>
+                <LineChart data={weeklyChartData}>
+                  <CartesianGrid stroke="rgba(148,163,184,0.08)" strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis domain={[0, 10]} tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "#101D31",
+                      border: "1px solid rgba(148,163,184,0.2)",
+                      borderRadius: 8,
+                      color: "#F8FAFC",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, color: "#94A3B8" }} />
+                  <Line
+                    type="monotone"
+                    dataKey="alumno"
+                    stroke="#3B82F6"
+                    strokeWidth={2.5}
+                    dot={{ r: 4, fill: "#3B82F6" }}
+                    name="Alumno"
+                    connectNulls
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="curso"
+                    stroke="#64748B"
+                    strokeWidth={1.5}
+                    strokeDasharray="5 5"
+                    dot={{ r: 3, fill: "#64748B" }}
+                    name="Media Curso"
+                    connectNulls
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartCard>
 
-        <Card title="Evolución Semanal: Alumno vs Curso">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={weeklyChartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="alumno"
-                stroke="var(--color-primary)"
-                strokeWidth={2}
-                dot={{ r: 4 }}
-                name="Alumno"
-              />
-              <Line
-                type="monotone"
-                dataKey="curso"
-                stroke="var(--color-text-secondary)"
-                strokeWidth={2}
-                strokeDasharray="5 5"
-                dot={{ r: 3 }}
-                name="Media Curso"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </Card>
+            <ChartCard title="Rendimiento por Módulo">
+              {radarData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={240}>
+                  <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
+                    <PolarGrid stroke="rgba(148,163,184,0.15)" />
+                    <PolarAngleAxis
+                      dataKey="module"
+                      tick={{ fill: "#94A3B8", fontSize: 9 }}
+                    />
+                    <PolarRadiusAxis
+                      angle={90}
+                      domain={[0, 10]}
+                      tick={{ fill: "#64748B", fontSize: 9 }}
+                      axisLine={false}
+                    />
+                    <Radar
+                      name="Alumno"
+                      dataKey="alumno"
+                      stroke="#3B82F6"
+                      fill="#3B82F6"
+                      fillOpacity={0.25}
+                      strokeWidth={2}
+                    />
+                    <Radar
+                      name="Curso"
+                      dataKey="curso"
+                      stroke="#14B8A6"
+                      fill="#14B8A6"
+                      fillOpacity={0.1}
+                      strokeWidth={1.5}
+                      strokeDasharray="4 4"
+                    />
+                    <Legend wrapperStyle={{ fontSize: 11, color: "#94A3B8" }} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className={styles.emptyState}>Sin datos de módulos</div>
+              )}
+            </ChartCard>
+          </div>
 
-        <Card title="Desglose por Semana (Formación)" style={{ gridColumn: "1 / -1" }}>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={moduleBarData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis domain={[0, 10]} tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="punctuality" fill="#003366" name="Puntualidad" />
-              <Bar dataKey="attention" fill="#0055aa" name="Atención" />
-              <Bar dataKey="participation" fill="#2a9d8f" name="Participación" />
-              <Bar dataKey="documentation" fill="#e9c46a" name="Documentación" />
-              <Bar dataKey="dexterity" fill="#f4a261" name="Destreza" />
-              <Bar dataKey="problemSolving" fill="#e63946" name="Resolución" />
-            </BarChart>
-          </ResponsiveContainer>
-        </Card>
+          {/* Weekly gradient bars */}
+          <ChartCard title="Detalle Semanal">
+            <div className={styles.weeklyBars}>
+              {data.weeklyData.map((w) => {
+                const avg = w.weekAvg ?? 0;
+                return (
+                  <div key={w.weekNumber} className={styles.weekRow}>
+                    <span className={styles.weekLabel}>
+                      Sem {w.weekNumber}
+                      <br />
+                      <span style={{ fontSize: "0.55rem", color: "var(--text-muted)" }}>
+                        {w.weekType === "WORKSHOP" ? "Taller" : "Form."}
+                      </span>
+                    </span>
+                    <div className={styles.weekBarTrack}>
+                      <div
+                        className={styles.weekBarFill}
+                        style={{
+                          width: `${(avg / 10) * 100}%`,
+                          background: weekBarGradient(avg),
+                        }}
+                      />
+                    </div>
+                    <span className={styles.weekBarValue}>{avg.toFixed(1)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+
+          {/* Module horizontal bars */}
+          <ChartCard title="Media por Módulo">
+            <div className={styles.moduleBars}>
+              {data.moduleAvgs.map((m) => {
+                const courseModule = data.courseModuleAvgs.find((cm) => cm.moduleName === m.moduleName);
+                const studentScore = m.studentAvg ?? 0;
+                const courseScore = courseModule?.courseAvg ?? 0;
+                return (
+                  <div key={m.moduleName} className={styles.moduleRow}>
+                    <div className={styles.moduleInfo}>
+                      <span className={styles.moduleName}>{m.moduleName}</span>
+                      <span className={styles.moduleScore}>
+                        {studentScore.toFixed(1)}{" "}
+                        <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
+                          / {courseScore.toFixed(1)} media
+                        </span>
+                      </span>
+                    </div>
+                    <div className={styles.moduleBarTrack}>
+                      <div
+                        className={styles.moduleBarFill}
+                        style={{ width: `${(studentScore / 10) * 100}%` }}
+                      />
+                      <div
+                        className={styles.moduleBarCourseFill}
+                        style={{ left: `${(courseScore / 10) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </ChartCard>
+        </div>
+
+        {/* Right column */}
+        <div className={styles.rightColumn}>
+          {/* Next Challenge (MOCK ESTÁTICO) */}
+          <div className={styles.rightCard}>
+            <div className={styles.rightCardTitle}>Próximo Reto</div>
+            <div className={styles.nextChallenge}>
+              <div className={styles.nextChallengeIcon}>🎯</div>
+              <div className={styles.nextChallengeTitle}>Subir al Top 5</div>
+              <div className={styles.nextChallengeSub}>
+                Estás en el puesto #{data.ranking ?? "?"} — ¡a por el #{Math.max(1, (data.ranking ?? 6) - 1)}!
+              </div>
+            </div>
+          </div>
+
+          {/* Feedback (MOCK ESTÁTICO) */}
+          <div className={styles.rightCard}>
+            <div className={styles.rightCardTitle}>Últimos Comentarios</div>
+            <div className={styles.feedbackItem}>
+              <div className={styles.feedbackAvatar}>AL</div>
+              <div className={styles.feedbackText}>
+                <div className={styles.feedbackName}>Ana López García</div>
+                <div className={styles.feedbackComment}>
+                  Buen progreso en diagnóstico electrónico. Seguir practicando con el equipo de medición.
+                </div>
+                <div className={styles.feedbackDate}>Hace 3 días</div>
+              </div>
+            </div>
+            <div className={styles.feedbackItem}>
+              <div className={styles.feedbackAvatar}>RF</div>
+              <div className={styles.feedbackText}>
+                <div className={styles.feedbackName}>Roberto Fernández</div>
+                <div className={styles.feedbackComment}>
+                  Excelente trabajo en taller. Demuestra buena destreza manual.
+                </div>
+                <div className={styles.feedbackDate}>Hace 1 semana</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Upcoming Classes */}
+          <div className={styles.rightCard}>
+            <div className={styles.rightCardTitle}>Próximas Clases</div>
+            {data.upcomingClasses.length > 0 ? (
+              <div className={styles.upcomingList}>
+                {data.upcomingClasses.map((cls) => {
+                  const d = new Date(cls.startDate);
+                  return (
+                    <DateEventItem
+                      key={cls.weekId}
+                      month={MONTH_NAMES[d.getMonth()]}
+                      day={d.getDate()}
+                      title={cls.moduleName ?? (cls.weekType === "WORKSHOP" ? "Taller Práctico" : "Formación")}
+                      group={`Semana ${cls.weekNumber}`}
+                      badge={cls.weekType === "WORKSHOP" ? "Taller" : "Teórico"}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className={styles.emptyState}>No hay clases programadas</div>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Achievements Row */}
+      <div className={styles.achievementsRow}>
+        <div className={styles.achievement}>
+          <div className={styles.achievementIcon}>🔥</div>
+          <div className={styles.achievementInfo}>
+            <div className={styles.achievementTitle}>Racha de asistencia</div>
+            <div className={styles.achievementSub}>
+              {data.attendancePct != null && data.attendancePct >= 95
+                ? "¡Asistencia perfecta!"
+                : `${data.attendancePct?.toFixed(0) ?? 0}% — ¡Sigue así!`}
+            </div>
+          </div>
+        </div>
+        <div className={styles.achievement}>
+          <div className={styles.achievementIcon}>📈</div>
+          <div className={styles.achievementInfo}>
+            <div className={styles.achievementTitle}>Mejora continua</div>
+            <div className={styles.achievementSub}>
+              {data.weeklyData.length >= 2 &&
+              (data.weeklyData[data.weeklyData.length - 1]?.weekAvg ?? 0) >
+                (data.weeklyData[0]?.weekAvg ?? 0)
+                ? `+${(
+                    (data.weeklyData[data.weeklyData.length - 1]?.weekAvg ?? 0) -
+                    (data.weeklyData[0]?.weekAvg ?? 0)
+                  ).toFixed(1)} pts desde semana 1`
+                : "Sigue esforzándote"}
+            </div>
+          </div>
+        </div>
+        <div className={styles.achievement}>
+          <div className={styles.achievementIcon}>🏆</div>
+          <div className={styles.achievementInfo}>
+            <div className={styles.achievementTitle}>Mejor módulo</div>
+            <div className={styles.achievementSub}>
+              {data.moduleAvgs.length > 0
+                ? (() => {
+                    const best = data.moduleAvgs.reduce((a, b) =>
+                      (a.studentAvg ?? 0) > (b.studentAvg ?? 0) ? a : b
+                    );
+                    return `${best.moduleName}: ${(best.studentAvg ?? 0).toFixed(1)}`;
+                  })()
+                : "Sin datos aún"}
+            </div>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
   );
 }

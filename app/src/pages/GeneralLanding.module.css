@@ -1,0 +1,318 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-base);
+}
+
+/* ── Nav ────────────────────────────────────── */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+.logo {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  text-decoration: none;
+}
+
+.logoIveco { color: var(--text-primary); }
+.logoSlash { color: var(--accent-teal); font-weight: 300; margin: 0 2px; }
+.logoAcademy { color: var(--accent-teal); }
+
+.navLinks {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.navLink {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+}
+
+.navCta {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.navCta:hover {
+  background: var(--accent-primary-hover);
+  color: white;
+}
+
+/* ── Hero ────────────────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 8rem 2rem 5rem;
+  background: radial-gradient(ellipse at top, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+}
+
+.heroEyebrow {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--accent-teal);
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: var(--leading-tight);
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.heroTitleGradient {
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSub {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+}
+
+.heroActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btnPrimary {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.85rem 2.5rem;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+}
+
+.btnPrimary:hover {
+  background: var(--accent-primary-hover);
+  color: white;
+  box-shadow: 0 4px 24px rgba(37, 99, 235, 0.4);
+}
+
+.btnOutline {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.85rem 2.5rem;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.btnOutline:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+/* ── Features ─────────────────────────────────── */
+.features {
+  padding: 4rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.featuresSectionTitle {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.featuresSectionTitle h2 {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.featuresSectionTitle p {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.featureCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+
+.featureCard:hover {
+  border-color: var(--accent-primary);
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.featureTitle {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.featureDesc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Roles ────────────────────────────────────── */
+.roles {
+  padding: 4rem 2rem;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.rolesInner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.rolesTitle {
+  text-align: center;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.rolesSub {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.rolesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.roleCard {
+  background: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.roleIcon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.roleTitle {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.roleDesc {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.roleCta {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--accent-primary-light);
+  text-decoration: none;
+}
+
+.roleCta:hover {
+  text-decoration: underline;
+}
+
+/* ── Footer ──────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.footerLogo {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.footerText {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 768px) {
+  .featuresGrid,
+  .rolesGrid {
+    grid-template-columns: 1fr;
+  }
+  .heroActions {
+    flex-direction: column;
+    align-items: center;
+  }
+  .navLinks {
+    display: none;
+  }
+}

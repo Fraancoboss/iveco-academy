@@ -1,0 +1,55 @@
+:root {
+  /* Base backgrounds */
+  --bg-base: #0A1220;
+  --bg-base-alt: #0D1726;
+  --bg-surface: #101D31;
+  --bg-surface-alt: #13233B;
+  --bg-surface-hover: #182D4A;
+  --border-subtle: rgba(148, 163, 184, 0.12);
+  --border-medium: rgba(148, 163, 184, 0.20);
+
+  /* Accent primary */
+  --accent-primary: #2563EB;
+  --accent-primary-light: #3B82F6;
+  --accent-primary-hover: #1D4ED8;
+  --accent-primary-bg: rgba(37, 99, 235, 0.12);
+
+  /* Accent secondary (teal) */
+  --accent-teal: #14B8A6;
+  --accent-teal-light: #2DD4BF;
+  --accent-teal-bg: rgba(20, 184, 166, 0.12);
+
+  /* Gradient */
+  --gradient-title: linear-gradient(135deg, #3B82F6, #22D3EE);
+
+  /* Text */
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-label: #94A3B8;
+
+  /* Semantic */
+  --color-positive: #22C55E;
+  --color-positive-bg: rgba(34, 197, 94, 0.12);
+  --color-danger: #EF4444;
+  --color-danger-bg: rgba(239, 68, 68, 0.12);
+  --color-warning: #F59E0B;
+  --color-warning-bg: rgba(245, 158, 11, 0.12);
+
+  /* Donut distribution */
+  --donut-excellent: #14B8A6;
+  --donut-good: #3B82F6;
+  --donut-regular: #F59E0B;
+  --donut-risk: #EF4444;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
