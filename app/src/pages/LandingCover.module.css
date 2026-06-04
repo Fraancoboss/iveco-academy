@@ -24,10 +24,11 @@
 
 .bgImg {
   width: 100%;
-  height: 100%;
+  height: 120%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center center;
   display: block;
+  will-change: transform;
 }
 
 /* Horizontal gradient: solid blue → transparent */
@@ -77,28 +78,65 @@
   justify-content: center;
   max-width: 640px;
   width: 100%;
-  padding-top: 40px;
+  padding-top: 90px;
 }
 
-/* Logo typographic */
-.logoBlock {
-  margin-bottom: 3rem;
+/* Header bar: logo + nav — absolute top, full width */
+.headerBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 1.25rem 0;
 }
 
-.logoIveco {
-  font-size: 28px;
-  font-weight: 800;
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+
+.headerLogo {
+  height: 48px;
+  width: auto;
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.headerLink {
+  font-size: 14px;
+  font-weight: 500;
+  color: #CBD5E1;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.headerLink:hover {
   color: #F8FAFC;
-  letter-spacing: 0.08em;
-  line-height: 1;
 }
 
-.logoAcademy {
-  font-size: 15px;
+.headerCta {
+  font-size: 13px;
   font-weight: 600;
-  color: #94A3B8;
-  letter-spacing: 0.06em;
-  margin-top: 2px;
+  padding: 0.5rem 1.5rem;
+  background: #2563EB;
+  color: white;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.headerCta:hover {
+  background: #1D4ED8;
+  color: white;
 }
 
 /* Hero text */
@@ -416,6 +454,7 @@
     padding: 0 36px;
   }
 
+  .headerInner,
   .bandBInner,
   .bandCInner {
     padding: 0 36px;
@@ -468,8 +507,16 @@
     padding-top: 0;
   }
 
-  .logoBlock {
-    margin-bottom: 1.5rem;
+  .headerInner {
+    padding: 0 1.25rem;
+  }
+
+  .headerNav {
+    gap: 1rem;
+  }
+
+  .headerLogo {
+    height: 36px;
   }
 
   .h1 {

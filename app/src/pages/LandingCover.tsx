@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   GraduationCap,
   Users,
@@ -14,11 +16,25 @@ import landingBg from "../assets/landing/landing-bg.png";
 import styles from "./LandingCover.module.css";
 
 export function LandingCover() {
+  const bgRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    function onScroll() {
+      if (bgRef.current) {
+        const y = window.scrollY;
+        bgRef.current.style.transform = `translateY(${y * 0.25}px)`;
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <section className={styles.cover} aria-label="Portada IVECO Academy">
       {/* Background image — right 55-60% */}
       <div className={styles.bgImage} role="img" aria-label="Equipo IVECO en taller industrial">
         <img
+          ref={bgRef}
           src={landingBg}
           alt="Equipo de técnicos IVECO en un taller industrial moderno"
           loading="eager"
@@ -29,14 +45,22 @@ export function LandingCover() {
         <div className={styles.bgOverlayV} />
       </div>
 
+      {/* ═══ Header bar ═══ */}
+      <header className={styles.headerBar}>
+        <div className={styles.headerInner}>
+          <Link to="/">
+            <img src="/iveco-academy-logo.png" alt="IVECO Academy" className={styles.headerLogo} />
+          </Link>
+          <nav className={styles.headerNav}>
+            <Link to="/inscripcion" className={styles.headerLink}>Inscripción</Link>
+            <Link to="/director" className={styles.headerCta}>Acceso</Link>
+          </nav>
+        </div>
+      </header>
+
       {/* ═══ ZONE A — Hero ═══ */}
       <div className={styles.heroWrapper}>
         <div className={styles.heroInner}>
-          {/* Logo */}
-          <header className={styles.logoBlock}>
-            <div className={styles.logoIveco}>IVECO</div>
-            <div className={styles.logoAcademy}>/ACADEMY</div>
-          </header>
 
           {/* Text block */}
           <div className={styles.heroText}>
