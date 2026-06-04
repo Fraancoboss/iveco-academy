@@ -117,7 +117,7 @@
 .fieldset {
   border: none;
   padding: 0;
-  margin: 0 0 1.75rem 0;
+  margin: 0 0 2.25rem 0;
 }
 
 .legend {
@@ -126,9 +126,9 @@
   color: #0F172A;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #E2E8F0;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid #CBD5E1;
   width: 100%;
   display: block;
 }
@@ -136,25 +136,25 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  margin-bottom: 0.875rem;
+  gap: 0.4rem;
+  margin-bottom: 1.1rem;
 }
 
 .label {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  color: #475569;
+  color: #334155;
   letter-spacing: 0.01em;
 }
 
 .input,
 .select,
 .textarea {
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  border-radius: 6px;
-  padding: 0.6rem 0.75rem;
-  font-size: 0.875rem;
+  background: #FFFFFF;
+  border: 1.5px solid #94A3B8;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  font-size: 0.9375rem;
   color: #0F172A;
   transition: border-color 0.15s, box-shadow 0.15s;
   width: 100%;
@@ -162,12 +162,18 @@
   font-family: inherit;
 }
 
+.input:hover,
+.select:hover,
+.textarea:hover {
+  border-color: #64748B;
+}
+
 .input:focus,
 .select:focus,
 .textarea:focus {
   outline: none;
   border-color: #2563EB;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .input::placeholder,
@@ -178,57 +184,58 @@
 .select {
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  padding-right: 2rem;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
 }
 
 .textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
 }
 
 /* ── Grid layouts ────────────────────────────── */
 .row2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .row3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 /* ── Phone row ───────────────────────────────── */
 .phoneRow {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .phoneCode {
-  width: 72px !important;
-  min-width: 72px;
+  width: 80px !important;
+  min-width: 80px;
   flex-shrink: 0;
   text-align: center;
 }
 
 /* ── Sub-sections (Titulación 1/2) ───────────── */
 .subSection {
-  padding: 1rem;
+  padding: 1.25rem;
   background: #F1F5F9;
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  margin-bottom: 1rem;
 }
 
 .subLabel {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: #2563EB;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -246,17 +253,18 @@
 
 /* ── Submit button ───────────────────────────── */
 .submitBtn {
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
-  padding: 0.85rem 2.5rem;
+  padding: 1rem 2.5rem;
   background: #2563EB;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, box-shadow 0.15s;
   width: 100%;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .submitBtn:hover {
