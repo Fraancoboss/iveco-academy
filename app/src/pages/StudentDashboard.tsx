@@ -130,12 +130,34 @@ export function StudentDashboard() {
   if (error) return <div className={styles.error}>{error}</div>;
   if (!data) return <div className={styles.loading}>Cargando dashboard...</div>;
 
-  const radarData = data.moduleAvgs.map((m) => {
-    const courseModule = data.courseModuleAvgs.find((cm) => cm.moduleName === m.moduleName);
+  // Pentagon: 5 competencies mapped from modules + behavior data
+  const COMPETENCY_MAP = [
+    { label: "Mecánica", moduleIdx: 1 },      // Motor y Gestión de Combustible
+    { label: "Electricidad", moduleIdx: 0 },   // Sistemas Electrónicos
+    { label: "Diagnóstico", moduleIdx: -1 },   // From behaviorAvgs.problemSolving
+    { label: "Sistemas", moduleIdx: 2 },       // Transmisión y Embrague
+    { label: "Hidráulica", moduleIdx: 3 },     // Frenos ABS/EBS
+  ];
+
+  const courseAvgFallback =
+    data.courseModuleAvgs.length > 0
+      ? data.courseModuleAvgs.reduce((s, m) => s + (m.courseAvg ?? 0), 0) / data.courseModuleAvgs.length
+      : 0;
+
+  const radarData = COMPETENCY_MAP.map((c) => {
+    let studentVal: number;
+    let courseVal: number;
+    if (c.moduleIdx >= 0 && c.moduleIdx < data.moduleAvgs.length) {
+      studentVal = data.moduleAvgs[c.moduleIdx]?.studentAvg ?? 0;
+      courseVal = data.courseModuleAvgs[c.moduleIdx]?.courseAvg ?? 0;
+    } else {
+      studentVal = data.behaviorAvgs.problemSolving ?? 0;
+      courseVal = courseAvgFallback;
+    }
     return {
-      module: m.moduleName.length > 18 ? m.moduleName.substring(0, 16) + "…" : m.moduleName,
-      alumno: m.studentAvg != null ? Number(m.studentAvg.toFixed(1)) : 0,
-      curso: courseModule?.courseAvg != null ? Number(courseModule.courseAvg.toFixed(1)) : 0,
+      competency: c.label,
+      alumno: Number(studentVal.toFixed(1)),
+      grupo: Number(courseVal.toFixed(1)),
       fullMark: 10,
     };
   });
@@ -248,20 +270,36 @@ export function StudentDashboard() {
               </ResponsiveContainer>
             </ChartCard>
 
-            <ChartCard title="Rendimiento por Módulo">
+            <ChartCard title="Evolución por Competencias">
               {radarData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={240}>
-                  <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
+                <ResponsiveContainer width="100%" height={280}>
+                  <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="60%">
                     <PolarGrid stroke="rgba(148,163,184,0.15)" />
-                    <PolarAngleAxis dataKey="module" tick={{ fill: "#94A3B8", fontSize: 9 }} />
+                    <PolarAngleAxis
+                      dataKey="competency"
+                      tick={(props: any) => {
+                        const { x, y, payload, textAnchor } = props;
+                        const item = radarData.find((d) => d.competency === payload.value);
+                        return (
+                          <text x={x} y={y} textAnchor={textAnchor}>
+                            <tspan fill="#94A3B8" fontSize={10} x={x} dy={0}>
+                              {payload.value}
+                            </tspan>
+                            <tspan fill="#F8FAFC" fontSize={14} fontWeight={700} x={x} dy={16}>
+                              {(item?.alumno ?? 0).toFixed(1).replace(".", ",")}
+                            </tspan>
+                          </text>
+                        );
+                      }}
+                    />
                     <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fill: "#64748B", fontSize: 9 }} axisLine={false} />
-                    <Radar name="Alumno" dataKey="alumno" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.25} strokeWidth={2} />
-                    <Radar name="Curso" dataKey="curso" stroke="#14B8A6" fill="#14B8A6" fillOpacity={0.1} strokeWidth={1.5} strokeDasharray="4 4" />
+                    <Radar name="Tu puntuación" dataKey="alumno" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.25} strokeWidth={2} />
+                    <Radar name="Promedio del grupo" dataKey="grupo" stroke="#14B8A6" fill="#14B8A6" fillOpacity={0.1} strokeWidth={1.5} strokeDasharray="4 4" />
                     <Legend wrapperStyle={{ fontSize: 11, color: "#94A3B8" }} />
                   </RadarChart>
                 </ResponsiveContainer>
               ) : (
-                <div className={styles.emptyState}>Sin datos de módulos</div>
+                <div className={styles.emptyState}>Sin datos de competencias</div>
               )}
             </ChartCard>
           </div>
