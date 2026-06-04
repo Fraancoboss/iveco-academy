@@ -10,6 +10,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import {
+  BarChart3,
+  ClipboardCheck,
+  Users,
+  Calendar,
+  FileText,
+  AlertTriangle,
+  TrendingUp,
+} from "lucide-react";
 import { DashboardLayout } from "../components/ui/DashboardLayout.js";
 import { KpiCard } from "../components/ui/KpiCard.js";
 import { ChartCard } from "../components/ui/ChartCard.js";
@@ -118,16 +127,16 @@ export function TrainerDashboard() {
     {
       label: "Panel Formador",
       items: [
-        { icon: "📊", label: "Dashboard", to: `/trainer/${id}`, active: true },
-        { icon: "📝", label: "Evaluaciones", to: "#", badge: data.pendingEvaluations.length || undefined },
-        { icon: "👥", label: "Alumnos", to: "#" },
-        { icon: "📅", label: "Calendario", to: "#" },
+        { icon: <BarChart3 size={16} />, label: "Dashboard", to: `/trainer/${id}`, active: true },
+        { icon: <ClipboardCheck size={16} />, label: "Evaluaciones", to: "#", badge: data.pendingEvaluations.length || undefined },
+        { icon: <Users size={16} />, label: "Alumnos", to: "#" },
+        { icon: <Calendar size={16} />, label: "Calendario", to: "#" },
       ],
     },
     {
       label: "Ediciones",
       items: data.editions.map((e) => ({
-        icon: "📋",
+        icon: <FileText size={16} />,
         label: e.editionName,
         to: "#",
         badge: `${e.enrolledCount}/${e.capacity}`,
@@ -153,19 +162,19 @@ export function TrainerDashboard() {
       {/* KPI Row */}
       <div className={styles.kpiRow}>
         <KpiCard
-          icon="👥"
+          icon={<Users size={18} />}
           label="Total Alumnos"
           value={String(data.totalStudents)}
           subtitle={`${data.editions.length} ediciones activas`}
         />
         <KpiCard
-          icon="📝"
+          icon={<ClipboardCheck size={18} />}
           label="Evaluaciones"
           value={String(data.evaluationCount)}
           subtitle="Realizadas"
         />
         <KpiCard
-          icon="⚠️"
+          icon={<AlertTriangle size={18} />}
           label="Pendientes"
           value={String(data.pendingEvaluations.length)}
           subtitle="Evaluaciones sin completar"
@@ -176,7 +185,7 @@ export function TrainerDashboard() {
           }
         />
         <KpiCard
-          icon="📈"
+          icon={<TrendingUp size={18} />}
           label="Media General"
           value={
             currentEdition?.avgScore != null
