@@ -10,44 +10,14 @@ import {
   UserCheck,
   LayoutDashboard,
 } from "lucide-react";
+import { LandingCover } from "./LandingCover.js";
 import styles from "./GeneralLanding.module.css";
 
 export function GeneralLanding() {
   return (
     <div className={styles.page}>
-      {/* Nav */}
-      <nav className={styles.nav}>
-        <Link to="/" className={styles.logo}>
-          <img src="/iveco-academy-logo.png" alt="IVECO Academy" style={{ height: 44, width: "auto" }} />
-        </Link>
-        <div className={styles.navLinks}>
-          <Link to="/school" className={styles.navLink}>Escuela</Link>
-          <Link to="/inscripcion" className={styles.navLink}>Inscripción</Link>
-          <Link to="/director" className={styles.navCta}>Acceder</Link>
-        </div>
-      </nav>
-
-      {/* Hero */}
-      <section className={styles.hero}>
-        <div className={styles.heroEyebrow}>Plataforma de Formación IVECO</div>
-        <h1 className={styles.heroTitle}>
-          Gestión integral de{" "}
-          <span className={styles.heroTitleGradient}>formación técnica</span>
-          {" "}para la red de concesionarios
-        </h1>
-        <p className={styles.heroSub}>
-          Seguimiento de alumnos, evaluaciones en tiempo real, analíticas de rendimiento
-          y gestión de inscripciones. Todo en una sola plataforma.
-        </p>
-        <div className={styles.heroActions}>
-          <Link to="/school" className={styles.btnPrimary}>
-            Ver Escuela
-          </Link>
-          <Link to="/director" className={styles.btnOutline}>
-            Demo Director
-          </Link>
-        </div>
-      </section>
+      {/* Cover — Hoja 1 (full viewport) */}
+      <LandingCover />
 
       {/* Features */}
       <section className={styles.features}>
