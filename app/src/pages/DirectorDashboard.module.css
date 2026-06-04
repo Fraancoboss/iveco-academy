@@ -1,108 +1,218 @@
-.page {
+.loading {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-secondary);
   min-height: 100vh;
-}
-
-.header {
-  padding: 1.5rem;
-}
-
-.header h1 {
-  font-size: 1.5rem;
-  color: var(--color-primary);
-}
-
-.editionSection {
-  padding: 0 1.5rem 1.5rem;
-}
-
-.editionTitle {
-  font-size: 1.2rem;
-  color: var(--color-primary);
-  margin-bottom: 0.25rem;
-}
-
-.courseName {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 1rem;
-}
-
-.kpiRow {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.tableCard {
-  margin-bottom: 1rem;
+/* ── Header ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.table th {
-  text-align: left;
-  padding: 0.5rem;
-  border-bottom: 2px solid var(--color-border);
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.table td {
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--color-border);
+.editionSelect {
+  background: var(--bg-surface-alt);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.75rem;
+  font-size: var(--text-xs);
 }
 
-.table tbody tr:hover {
-  background: var(--color-bg);
+/* ── KPI Row ────────────────────────────────── */
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--content-gap);
+  margin-bottom: var(--content-gap);
 }
 
-.atRiskRow {
-  background: rgba(230, 57, 70, 0.06);
-}
-
-.atRiskRow td {
-  color: var(--color-danger);
-  font-weight: 500;
-}
-
-.atRiskRow a {
-  color: var(--color-danger);
-}
-
-.overdue {
-  font-weight: 600;
-  color: var(--color-danger);
-}
-
-.bottomGrid {
+/* ── Content Grid ───────────────────────────── */
+.contentGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  padding: 0 1.5rem 1.5rem;
+  gap: var(--content-gap);
+  margin-bottom: var(--content-gap);
 }
 
-.loading,
-.empty {
-  padding: 1rem;
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* ── Donut Chart ────────────────────────────── */
+.donutContainer {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.5rem 0;
+}
+
+.donutLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.legendValue {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── At-risk students ───────────────────────── */
+.atRiskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.atRiskItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-surface-alt);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-danger);
+}
+
+.atRiskAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.atRiskInfo {
+  flex: 1;
+}
+
+.atRiskName {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.atRiskMeta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.atRiskScore {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+/* ── Activity Feed (MOCK ESTÁTICO) ──────────── */
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.activityItem {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.activityText {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.activityText strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.activityTime {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* ── Empty state ────────────────────────────── */
+.emptyState {
   text-align: center;
-  color: var(--color-text-secondary);
-  font-size: 0.9rem;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
 }
 
+/* ── Responsive ─────────────────────────────── */
 @media (max-width: 768px) {
-  .bottomGrid {
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .contentGrid {
     grid-template-columns: 1fr;
   }
-
-  .kpiRow {
+  .donutContainer {
     flex-direction: column;
+    align-items: flex-start;
   }
 }
