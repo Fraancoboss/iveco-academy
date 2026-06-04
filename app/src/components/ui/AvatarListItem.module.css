@@ -1,0 +1,83 @@
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: default;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item[role="button"] {
+  cursor: pointer;
+}
+
+.item[role="button"]:hover {
+  background: var(--bg-surface-hover);
+  margin: 0 -0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: white;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.value {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.valueBadge {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+}
+
+.positive {
+  background: var(--color-positive-bg);
+  color: var(--color-positive);
+}
+
+.negative {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}

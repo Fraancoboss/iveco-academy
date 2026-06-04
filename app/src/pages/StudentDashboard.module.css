@@ -1,58 +1,346 @@
-.page {
-  min-height: 100vh;
-}
-
-.header {
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.header h1 {
-  font-size: 1.5rem;
-  color: var(--color-primary);
-}
-
-.editionBadge {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.75rem;
-  background: var(--color-primary);
-  color: white;
-  border-radius: 12px;
-}
-
-.kpiRow {
-  display: flex;
-  gap: 1rem;
-  padding: 0 1.5rem;
-  flex-wrap: wrap;
-}
-
-.chartGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  padding: 1.5rem;
-}
-
 .loading,
 .error {
-  padding: 2rem;
+  padding: 3rem;
   text-align: center;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .error {
   color: var(--color-danger);
 }
 
-@media (max-width: 768px) {
-  .chartGrid {
+/* ── Header ─────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.studentName {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.editionBadge {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  background: var(--accent-primary-bg);
+  color: var(--accent-primary-light);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+
+/* ── KPI Row ────────────────────────────────── */
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--content-gap);
+  margin-bottom: var(--content-gap);
+}
+
+/* ── Main Grid ──────────────────────────────── */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--content-gap);
+}
+
+.chartsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-gap);
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-gap);
+}
+
+/* ── Charts row ─────────────────────────────── */
+.chartsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--content-gap);
+}
+
+/* ── Weekly Bars ────────────────────────────── */
+.weeklyBars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.weekRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.weekLabel {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  width: 54px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.weekBarTrack {
+  flex: 1;
+  height: 20px;
+  background: var(--bg-surface-alt);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.weekBarFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.weekBarValue {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  width: 34px;
+  flex-shrink: 0;
+}
+
+/* ── Module Bars (horizontal) ──────────────── */
+.moduleBars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.moduleRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.moduleInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.moduleName {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.moduleScore {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.moduleBarTrack {
+  height: 8px;
+  background: var(--bg-surface-alt);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.moduleBarFill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--accent-primary);
+  transition: width 0.4s ease;
+}
+
+.moduleBarCourseFill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: var(--accent-teal);
+}
+
+/* ── Right Column Cards ─────────────────────── */
+.rightCard {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.rightCardTitle {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: var(--accent-teal);
+  margin-bottom: 1rem;
+}
+
+.nextChallenge {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.nextChallengeIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.nextChallengeTitle {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.nextChallengeSub {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* ── Feedback mock ──────────────────────────── */
+.feedbackItem {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.feedbackItem:last-child {
+  border-bottom: none;
+}
+
+.feedbackAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-teal-bg);
+  color: var(--accent-teal);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.feedbackText {
+  flex: 1;
+}
+
+.feedbackName {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.feedbackComment {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
+.feedbackDate {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ── Upcoming classes list ──────────────────── */
+.upcomingList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* ── Achievements ───────────────────────────── */
+.achievementsRow {
+  display: flex;
+  gap: var(--content-gap);
+  margin-top: var(--content-gap);
+}
+
+.achievement {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.achievementIcon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-primary-bg);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.achievementInfo {
+  flex: 1;
+}
+
+.achievementTitle {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.achievementSub {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* ── Empty state ────────────────────────────── */
+.emptyState {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 1200px) {
+  .mainGrid {
     grid-template-columns: 1fr;
   }
+  .rightColumn {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .rightColumn > * {
+    flex: 1;
+    min-width: 250px;
+  }
+}
 
+@media (max-width: 768px) {
   .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .chartsRow {
+    grid-template-columns: 1fr;
+  }
+  .achievementsRow {
     flex-direction: column;
   }
 }
