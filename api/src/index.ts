@@ -17,6 +17,95 @@ function toNumber(val: unknown): number | null {
   return Number(val);
 }
 
+// ─── GET /api/students/:id/home ──────────────────────────
+
+app.get("/api/students/:id/home", async (c) => {
+  const userId = c.req.param("id");
+
+  const enrollment = await prisma.enrollment.findFirst({
+    where: { userId },
+    include: {
+      edition: { include: { course: true } },
+      user: true,
+    },
+    orderBy: { enrolledAt: "desc" },
+  });
+
+  if (!enrollment) return c.json({ error: "Student not found" }, 404);
+
+  const editionId = enrollment.editionId;
+
+  // Module progress from view
+  const moduleProgress: any[] = await prisma.$queryRaw`
+    SELECT * FROM v_student_module_progress
+    WHERE user_id = ${userId} AND edition_id = ${editionId}
+    ORDER BY module_order
+  `;
+
+  // Overall progress (avg of module progress percentages)
+  const overallProgress =
+    moduleProgress.length > 0
+      ? moduleProgress.reduce((sum: number, m: any) => sum + Number(m.progress_pct), 0) / moduleProgress.length
+      : 0;
+
+  // Next unevaluated week for this student
+  const nextWeek: any[] = await prisma.$queryRaw`
+    SELECT TOP 1 w.id, w.weekNumber, w.startDate, w.endDate, w.weekType, m.name AS moduleName
+    FROM weeks w
+    INNER JOIN enrollments en ON en.editionId = w.editionId
+    LEFT JOIN evaluations ev ON ev.weekId = w.id AND ev.enrollmentId = en.id
+    LEFT JOIN modules m ON m.id = w.moduleId
+    WHERE en.userId = ${userId} AND en.editionId = ${editionId} AND ev.id IS NULL
+    ORDER BY w.weekNumber
+  `;
+
+  // Recent activity: last 2 evaluations with comments
+  const recentActivity: any[] = await prisma.$queryRaw`
+    SELECT TOP 2 ev.evaluatedAt, ev.comments, w.weekNumber, w.weekType, m.name AS moduleName,
+           u.name AS evaluatorName
+    FROM evaluations ev
+    INNER JOIN enrollments en ON en.id = ev.enrollmentId
+    INNER JOIN weeks w ON w.id = ev.weekId
+    LEFT JOIN modules m ON m.id = w.moduleId
+    INNER JOIN users u ON u.id = ev.evaluatorId
+    WHERE en.userId = ${userId} AND en.editionId = ${editionId} AND ev.comments IS NOT NULL
+    ORDER BY ev.evaluatedAt DESC
+  `;
+
+  return c.json({
+    studentId: userId,
+    studentName: enrollment.user.name,
+    editionId,
+    editionName: enrollment.edition.name,
+    courseName: enrollment.edition.course?.name ?? "",
+    moduleCount: moduleProgress.length,
+    overallProgress,
+    modules: moduleProgress.map((m: any) => ({
+      moduleId: m.module_id,
+      moduleName: m.module_name,
+      totalWeeks: m.total_weeks,
+      evaluatedWeeks: m.evaluated_weeks,
+      progressPct: Number(m.progress_pct),
+    })),
+    nextEvaluation: nextWeek[0]
+      ? {
+          weekNumber: nextWeek[0].weekNumber,
+          startDate: nextWeek[0].startDate?.toISOString?.() ?? nextWeek[0].startDate,
+          weekType: nextWeek[0].weekType,
+          moduleName: nextWeek[0].moduleName,
+        }
+      : null,
+    recentActivity: recentActivity.map((a: any) => ({
+      evaluatedAt: a.evaluatedAt?.toISOString?.() ?? a.evaluatedAt,
+      comments: a.comments,
+      weekNumber: a.weekNumber,
+      weekType: a.weekType,
+      moduleName: a.moduleName,
+      evaluatorName: a.evaluatorName,
+    })),
+  });
+});
+
 // ─── GET /api/students/:id/dashboard ─────────────────────
 
 app.get("/api/students/:id/dashboard", async (c) => {

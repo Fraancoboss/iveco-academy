@@ -33,6 +33,34 @@ const SPANISH_STUDENTS_B = [
   "Álvaro Reyes", "Natalia Castro",
 ];
 
+// Guaranteed Spanish comments for demo student Alejandro Ruiz
+const ALEJANDRO_COMMENTS = [
+  "Buen inicio en el módulo de electrónica. Muestra interés y ganas de aprender.",
+  "Mejora notable en el manejo del equipo de diagnóstico.",
+  "Destreza manual aceptable. Debe practicar más las conexiones eléctricas.",
+  "Comprende los principios básicos del motor. Buen trabajo en equipo.",
+  "Domina ya los protocolos de diagnóstico electrónico. Excelente progreso.",
+  "Muy buen rendimiento en taller. Ayuda a sus compañeros.",
+  "Avance sólido en gestión de combustible. Participación activa.",
+  "Primera sesión de transmisión. Muestra buena comprensión teórica.",
+  "Excelente trabajo práctico. Destaca en resolución de problemas.",
+  "Inicio prometedor en frenos ABS/EBS. Atención al detalle.",
+];
+
+// Random Spanish comments for other students
+const SPANISH_COMMENTS = [
+  "Buen rendimiento general. Sigue así.",
+  "Necesita mejorar la puntualidad.",
+  "Excelente participación en clase.",
+  "Debe repasar los conceptos teóricos.",
+  "Buena actitud y compromiso con el programa.",
+  "Progreso adecuado. Puede mejorar en documentación.",
+  "Destaca en las actividades prácticas.",
+  "Falta de atención durante las explicaciones teóricas.",
+  "Mejora constante semana a semana.",
+  "Debe practicar más con las herramientas de diagnóstico.",
+];
+
 async function main() {
   console.log("Seeding database...");
 
@@ -93,7 +121,7 @@ async function main() {
         courseId,
         name: "MEC26-01",
         startDate: new Date("2026-01-12"),
-        endDate: new Date("2026-04-03"),
+        endDate: new Date("2026-04-24"),
         capacity: 12,
       },
       {
@@ -349,26 +377,46 @@ async function main() {
   }
 
   // ─── Weeks ───────────────────────────────────────────
+  // Edition A: 15 weeks with explicit module mapping for disparate progress
+  // mod0=75%, mod1=67%, mod2=50%, mod3=33%, mod4=not scheduled
+  const WEEK_PLAN_A: { weekType: "TRAINING" | "WORKSHOP"; moduleIndex: number | null }[] = [
+    { weekType: "TRAINING", moduleIndex: 0 },  // w1  → Sistemas Electrónicos
+    { weekType: "TRAINING", moduleIndex: 0 },  // w2  → Sistemas Electrónicos
+    { weekType: "WORKSHOP", moduleIndex: null },// w3
+    { weekType: "TRAINING", moduleIndex: 1 },  // w4  → Motor
+    { weekType: "TRAINING", moduleIndex: 0 },  // w5  → Sistemas Electrónicos
+    { weekType: "WORKSHOP", moduleIndex: null },// w6
+    { weekType: "TRAINING", moduleIndex: 1 },  // w7  → Motor
+    { weekType: "TRAINING", moduleIndex: 2 },  // w8  → Transmisión
+    { weekType: "WORKSHOP", moduleIndex: null },// w9
+    { weekType: "TRAINING", moduleIndex: 3 },  // w10 → Frenos ABS
+    { weekType: "TRAINING", moduleIndex: 0 },  // w11 → Sist. Electrónicos (not evaluated)
+    { weekType: "TRAINING", moduleIndex: 1 },  // w12 → Motor (not evaluated)
+    { weekType: "TRAINING", moduleIndex: 2 },  // w13 → Transmisión (not evaluated)
+    { weekType: "TRAINING", moduleIndex: 3 },  // w14 → Frenos ABS (not evaluated)
+    { weekType: "TRAINING", moduleIndex: 3 },  // w15 → Frenos ABS (not evaluated)
+  ];
+
   const weeksA: { id: string; weekNumber: number; weekType: string; moduleId: string | null }[] = [];
   const edAStart = new Date("2026-01-12");
-  for (let w = 1; w <= 10; w++) {
+  for (let w = 0; w < WEEK_PLAN_A.length; w++) {
+    const plan = WEEK_PLAN_A[w];
     const weekStart = new Date(edAStart);
-    weekStart.setDate(edAStart.getDate() + (w - 1) * 7);
+    weekStart.setDate(edAStart.getDate() + w * 7);
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekStart.getDate() + 4);
 
-    const weekType = w % 3 === 0 ? "WORKSHOP" : "TRAINING";
-    const moduleIdx = weekType === "TRAINING" ? Math.min(Math.floor((w - 1) / 2), moduleIds.length - 1) : null;
+    const moduleId = plan.moduleIndex !== null ? moduleIds[plan.moduleIndex] : null;
     const weekId = genId();
-    weeksA.push({ id: weekId, weekNumber: w, weekType, moduleId: moduleIdx !== null ? moduleIds[moduleIdx] : null });
+    weeksA.push({ id: weekId, weekNumber: w + 1, weekType: plan.weekType, moduleId });
 
     await prisma.week.create({
       data: {
         id: weekId,
         editionId: editionAId,
-        weekNumber: w,
-        weekType,
-        moduleId: moduleIdx !== null ? moduleIds[moduleIdx] : null,
+        weekNumber: w + 1,
+        weekType: plan.weekType,
+        moduleId,
         startDate: weekStart,
         endDate: weekEnd,
       },
@@ -402,7 +450,9 @@ async function main() {
   }
 
   // ─── Evaluations ─────────────────────────────────────
-  for (let wi = 0; wi < 8; wi++) {
+  // Edition A: evaluate first 10 weeks (w1-w10)
+  const EVALUATED_WEEKS_A = 10;
+  for (let wi = 0; wi < EVALUATED_WEEKS_A; wi++) {
     const week = weeksA[wi];
     for (let si = 0; si < 12; si++) {
       const student = studentsEditionA[si];
@@ -411,13 +461,23 @@ async function main() {
       const isWorkshop = week.weekType === "WORKSHOP";
       const evaluatorId = isWorkshop ? workshopLeadId : trainerId;
 
-      // Use ascending scores for demo student (index 0)
       const getScore = student.ascending
-        ? () => ascendingScore(wi, 8)
+        ? () => ascendingScore(wi, EVALUATED_WEEKS_A)
         : () => score(student.targetAvg);
 
       const evalDate = new Date(edAStart);
       evalDate.setDate(edAStart.getDate() + wi * 7 + 5);
+
+      // Comments: guaranteed Spanish for Alejandro, random Spanish for others
+      let comment: string | null = null;
+      if (student.ascending) {
+        comment = ALEJANDRO_COMMENTS[wi] ?? null;
+      } else {
+        comment = faker.helpers.maybe(
+          () => faker.helpers.arrayElement(SPANISH_COMMENTS),
+          { probability: 0.3 }
+        ) ?? null;
+      }
 
       await prisma.evaluation.create({
         data: {
@@ -429,11 +489,11 @@ async function main() {
           punctuality: isWorkshop ? null : getScore(),
           attention: isWorkshop ? null : getScore(),
           participation: isWorkshop ? null : getScore(),
-          documentation: isWorkshop ? null : score(student.ascending ? 5 + (wi / 7) * 3 : student.targetAvg, 2),
+          documentation: isWorkshop ? null : score(student.ascending ? 5 + (wi / (EVALUATED_WEEKS_A - 1)) * 3 : student.targetAvg, 2),
           dexterity: isWorkshop ? null : getScore(),
-          problemSolving: isWorkshop ? null : score(student.ascending ? 5 + (wi / 7) * 3.5 : student.targetAvg, 2),
+          problemSolving: isWorkshop ? null : score(student.ascending ? 5 + (wi / (EVALUATED_WEEKS_A - 1)) * 3.5 : student.targetAvg, 2),
           workshopGrade: isWorkshop ? getScore() : null,
-          comments: faker.helpers.maybe(() => faker.lorem.sentence(), { probability: 0.3 }) ?? null,
+          comments: comment,
           evaluatedAt: evalDate,
         },
       });
@@ -447,7 +507,7 @@ async function main() {
               id: genId(),
               evaluationId: evalId,
               itemName,
-              score: student.ascending ? ascendingScore(wi, 8) : score(student.targetAvg, 1.5),
+              score: student.ascending ? ascendingScore(wi, EVALUATED_WEEKS_A) : score(student.targetAvg, 1.5),
             },
           });
         }
@@ -515,7 +575,7 @@ async function main() {
   }
 
   console.log("Seed completed successfully.");
-  console.log("Edition A (MEC26-01): 12 enrolled, 3 queued, 1 rejected");
+  console.log("Edition A (MEC26-01): 12 enrolled, 3 queued, 1 rejected, 15 weeks (10 evaluated)");
   console.log("Edition B (MEC26-02): 6 enrolled");
   console.log("Demo student (ascending): Alejandro Ruiz");
   console.log(`Trainer ID: ${trainerId}`);
