@@ -1,0 +1,108 @@
+.page {
+  min-height: 100vh;
+}
+
+.header {
+  padding: 1.5rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.editionSection {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.editionTitle {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.courseName {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.kpiRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tableCard {
+  margin-bottom: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr:hover {
+  background: var(--color-bg);
+}
+
+.atRiskRow {
+  background: rgba(230, 57, 70, 0.06);
+}
+
+.atRiskRow td {
+  color: var(--color-danger);
+  font-weight: 500;
+}
+
+.atRiskRow a {
+  color: var(--color-danger);
+}
+
+.overdue {
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.bottomGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.loading,
+.empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpiRow {
+    flex-direction: column;
+  }
+}

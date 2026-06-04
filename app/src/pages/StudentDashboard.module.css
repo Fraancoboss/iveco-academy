@@ -1,0 +1,58 @@
+.page {
+  min-height: 100vh;
+}
+
+.header {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+.editionBadge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 12px;
+}
+
+.kpiRow {
+  display: flex;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  flex-wrap: wrap;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.loading,
+.error {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+@media (max-width: 768px) {
+  .chartGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpiRow {
+    flex-direction: column;
+  }
+}

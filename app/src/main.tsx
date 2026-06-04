@@ -1,0 +1,20 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { StudentDashboard } from "./pages/StudentDashboard.js";
+import { DirectorDashboard } from "./pages/DirectorDashboard.js";
+import { Watermark } from "./components/Watermark.js";
+import "./styles/global.css";
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <BrowserRouter>
+      <Watermark />
+      <Routes>
+        <Route path="/student/:id" element={<StudentDashboard />} />
+        <Route path="/director" element={<DirectorDashboard />} />
+        <Route path="*" element={<Navigate to="/director" replace />} />
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>
+);
