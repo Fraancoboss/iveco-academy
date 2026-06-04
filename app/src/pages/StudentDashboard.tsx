@@ -15,6 +15,21 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
+import {
+  BarChart3,
+  Calendar,
+  ClipboardCheck,
+  BookOpen,
+  GraduationCap,
+  FileText,
+  TrendingUp,
+  Trophy,
+  CheckCircle,
+  Wrench,
+  Target,
+  Flame,
+  Award,
+} from "lucide-react";
 import { DashboardLayout } from "../components/ui/DashboardLayout.js";
 import { KpiCard } from "../components/ui/KpiCard.js";
 import { ChartCard } from "../components/ui/ChartCard.js";
@@ -94,7 +109,6 @@ function weekBarGradient(score: number): string {
   return "linear-gradient(90deg, #EF4444, #F87171)";
 }
 
-// Last workshop grade from weekly data
 function lastWorkshopGrade(weeklyData: WeeklyData[]): number | null {
   for (let i = weeklyData.length - 1; i >= 0; i--) {
     if (weeklyData[i].workshopGrade != null) return weeklyData[i].workshopGrade;
@@ -121,8 +135,7 @@ export function StudentDashboard() {
   if (error) return <div className={styles.error}>{error}</div>;
   if (!data) return <div className={styles.loading}>Cargando dashboard...</div>;
 
-  // Radar data: 5 modules (from API moduleAvgs)
-  const radarData = data.moduleAvgs.map((m, i) => {
+  const radarData = data.moduleAvgs.map((m) => {
     const courseModule = data.courseModuleAvgs.find((cm) => cm.moduleName === m.moduleName);
     return {
       module: m.moduleName.length > 18 ? m.moduleName.substring(0, 16) + "…" : m.moduleName,
@@ -132,7 +145,6 @@ export function StudentDashboard() {
     };
   });
 
-  // Weekly line chart
   const weeklyChartData = data.weeklyData.map((w) => ({
     name: `S${w.weekNumber}`,
     alumno: w.weekAvg != null ? Number(w.weekAvg.toFixed(2)) : null,
@@ -145,17 +157,17 @@ export function StudentDashboard() {
     {
       label: "Mi Panel",
       items: [
-        { icon: "📊", label: "Dashboard", to: `/student/${id}`, active: true },
-        { icon: "📅", label: "Calendario", to: "#" },
-        { icon: "📝", label: "Evaluaciones", to: "#" },
-        { icon: "📚", label: "Material", to: "#" },
+        { icon: <BarChart3 size={16} />, label: "Dashboard", to: `/student/${id}`, active: true },
+        { icon: <Calendar size={16} />, label: "Calendario", to: "#" },
+        { icon: <ClipboardCheck size={16} />, label: "Evaluaciones", to: "#" },
+        { icon: <BookOpen size={16} />, label: "Material", to: "#" },
       ],
     },
     {
       label: "Programa",
       items: [
-        { icon: "🎓", label: data.courseName || "Curso", to: "#" },
-        { icon: "📋", label: data.editionName, badge: `${data.weeklyData.length} sem` },
+        { icon: <GraduationCap size={16} />, label: data.courseName || "Curso", to: "#" },
+        { icon: <FileText size={16} />, label: data.editionName, badge: `${data.weeklyData.length} sem` },
       ],
     },
   ];
@@ -192,20 +204,18 @@ export function StudentDashboard() {
         ) : undefined
       }
     >
-      {/* Header */}
       <div className={styles.header}>
         <span className={styles.studentName}>{data.studentName}</span>
         <span className={styles.editionBadge}>{data.editionName}</span>
       </div>
 
-      {/* KPI Row */}
       <div className={styles.kpiRow}>
         <KpiCard
-          icon="📈"
+          icon={<TrendingUp size={18} />}
           label="Promedio General"
           value={data.overallAvg != null ? data.overallAvg.toFixed(1) : "—"}
           unit="/10"
-          subtitle={`Objetivo: 7.0`}
+          subtitle="Objetivo: 7.0"
           delta={
             data.weeklyData.length >= 2
               ? (() => {
@@ -221,21 +231,21 @@ export function StudentDashboard() {
           }
         />
         <KpiCard
-          icon="🏆"
+          icon={<Trophy size={18} />}
           label="Ranking"
           value={data.ranking != null ? `#${data.ranking}` : "—"}
           unit={`de ${data.totalStudents}`}
           subtitle={data.editionName}
         />
         <KpiCard
-          icon="✅"
+          icon={<CheckCircle size={18} />}
           label="Asistencia"
           value={data.attendancePct != null ? `${data.attendancePct.toFixed(0)}` : "—"}
           unit="%"
           subtitle="Mínimo requerido: 80%"
         />
         <KpiCard
-          icon="🔧"
+          icon={<Wrench size={18} />}
           label="Nota Taller"
           value={workshopGrade != null ? workshopGrade.toFixed(1) : "—"}
           unit="/10"
@@ -243,11 +253,8 @@ export function StudentDashboard() {
         />
       </div>
 
-      {/* Main content grid */}
       <div className={styles.mainGrid}>
-        {/* Left: Charts column */}
         <div className={styles.chartsColumn}>
-          {/* Line + Radar row */}
           <div className={styles.chartsRow}>
             <ChartCard title="Evolución Semanal">
               <ResponsiveContainer width="100%" height={240}>
@@ -255,35 +262,10 @@ export function StudentDashboard() {
                   <CartesianGrid stroke="rgba(148,163,184,0.08)" strokeDasharray="3 3" />
                   <XAxis dataKey="name" tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis domain={[0, 10]} tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#101D31",
-                      border: "1px solid rgba(148,163,184,0.2)",
-                      borderRadius: 8,
-                      color: "#F8FAFC",
-                      fontSize: 12,
-                    }}
-                  />
+                  <Tooltip contentStyle={{ background: "#101D31", border: "1px solid rgba(148,163,184,0.2)", borderRadius: 8, color: "#F8FAFC", fontSize: 12 }} />
                   <Legend wrapperStyle={{ fontSize: 11, color: "#94A3B8" }} />
-                  <Line
-                    type="monotone"
-                    dataKey="alumno"
-                    stroke="#3B82F6"
-                    strokeWidth={2.5}
-                    dot={{ r: 4, fill: "#3B82F6" }}
-                    name="Alumno"
-                    connectNulls
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="curso"
-                    stroke="#64748B"
-                    strokeWidth={1.5}
-                    strokeDasharray="5 5"
-                    dot={{ r: 3, fill: "#64748B" }}
-                    name="Media Curso"
-                    connectNulls
-                  />
+                  <Line type="monotone" dataKey="alumno" stroke="#3B82F6" strokeWidth={2.5} dot={{ r: 4, fill: "#3B82F6" }} name="Alumno" connectNulls />
+                  <Line type="monotone" dataKey="curso" stroke="#64748B" strokeWidth={1.5} strokeDasharray="5 5" dot={{ r: 3, fill: "#64748B" }} name="Media Curso" connectNulls />
                 </LineChart>
               </ResponsiveContainer>
             </ChartCard>
@@ -293,33 +275,10 @@ export function StudentDashboard() {
                 <ResponsiveContainer width="100%" height={240}>
                   <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
                     <PolarGrid stroke="rgba(148,163,184,0.15)" />
-                    <PolarAngleAxis
-                      dataKey="module"
-                      tick={{ fill: "#94A3B8", fontSize: 9 }}
-                    />
-                    <PolarRadiusAxis
-                      angle={90}
-                      domain={[0, 10]}
-                      tick={{ fill: "#64748B", fontSize: 9 }}
-                      axisLine={false}
-                    />
-                    <Radar
-                      name="Alumno"
-                      dataKey="alumno"
-                      stroke="#3B82F6"
-                      fill="#3B82F6"
-                      fillOpacity={0.25}
-                      strokeWidth={2}
-                    />
-                    <Radar
-                      name="Curso"
-                      dataKey="curso"
-                      stroke="#14B8A6"
-                      fill="#14B8A6"
-                      fillOpacity={0.1}
-                      strokeWidth={1.5}
-                      strokeDasharray="4 4"
-                    />
+                    <PolarAngleAxis dataKey="module" tick={{ fill: "#94A3B8", fontSize: 9 }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 10]} tick={{ fill: "#64748B", fontSize: 9 }} axisLine={false} />
+                    <Radar name="Alumno" dataKey="alumno" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.25} strokeWidth={2} />
+                    <Radar name="Curso" dataKey="curso" stroke="#14B8A6" fill="#14B8A6" fillOpacity={0.1} strokeWidth={1.5} strokeDasharray="4 4" />
                     <Legend wrapperStyle={{ fontSize: 11, color: "#94A3B8" }} />
                   </RadarChart>
                 </ResponsiveContainer>
@@ -329,7 +288,6 @@ export function StudentDashboard() {
             </ChartCard>
           </div>
 
-          {/* Weekly gradient bars */}
           <ChartCard title="Detalle Semanal">
             <div className={styles.weeklyBars}>
               {data.weeklyData.map((w) => {
@@ -344,13 +302,7 @@ export function StudentDashboard() {
                       </span>
                     </span>
                     <div className={styles.weekBarTrack}>
-                      <div
-                        className={styles.weekBarFill}
-                        style={{
-                          width: `${(avg / 10) * 100}%`,
-                          background: weekBarGradient(avg),
-                        }}
-                      />
+                      <div className={styles.weekBarFill} style={{ width: `${(avg / 10) * 100}%`, background: weekBarGradient(avg) }} />
                     </div>
                     <span className={styles.weekBarValue}>{avg.toFixed(1)}</span>
                   </div>
@@ -359,7 +311,6 @@ export function StudentDashboard() {
             </div>
           </ChartCard>
 
-          {/* Module horizontal bars */}
           <ChartCard title="Media por Módulo">
             <div className={styles.moduleBars}>
               {data.moduleAvgs.map((m) => {
@@ -372,20 +323,12 @@ export function StudentDashboard() {
                       <span className={styles.moduleName}>{m.moduleName}</span>
                       <span className={styles.moduleScore}>
                         {studentScore.toFixed(1)}{" "}
-                        <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
-                          / {courseScore.toFixed(1)} media
-                        </span>
+                        <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {courseScore.toFixed(1)} media</span>
                       </span>
                     </div>
                     <div className={styles.moduleBarTrack}>
-                      <div
-                        className={styles.moduleBarFill}
-                        style={{ width: `${(studentScore / 10) * 100}%` }}
-                      />
-                      <div
-                        className={styles.moduleBarCourseFill}
-                        style={{ left: `${(courseScore / 10) * 100}%` }}
-                      />
+                      <div className={styles.moduleBarFill} style={{ width: `${(studentScore / 10) * 100}%` }} />
+                      <div className={styles.moduleBarCourseFill} style={{ left: `${(courseScore / 10) * 100}%` }} />
                     </div>
                   </div>
                 );
@@ -394,13 +337,11 @@ export function StudentDashboard() {
           </ChartCard>
         </div>
 
-        {/* Right column */}
         <div className={styles.rightColumn}>
-          {/* Next Challenge (MOCK ESTÁTICO) */}
           <div className={styles.rightCard}>
             <div className={styles.rightCardTitle}>Próximo Reto</div>
             <div className={styles.nextChallenge}>
-              <div className={styles.nextChallengeIcon}>🎯</div>
+              <div className={styles.nextChallengeIcon}><Target size={32} strokeWidth={1.5} /></div>
               <div className={styles.nextChallengeTitle}>Subir al Top 5</div>
               <div className={styles.nextChallengeSub}>
                 Estás en el puesto #{data.ranking ?? "?"} — ¡a por el #{Math.max(1, (data.ranking ?? 6) - 1)}!
@@ -408,16 +349,13 @@ export function StudentDashboard() {
             </div>
           </div>
 
-          {/* Feedback (MOCK ESTÁTICO) */}
           <div className={styles.rightCard}>
             <div className={styles.rightCardTitle}>Últimos Comentarios</div>
             <div className={styles.feedbackItem}>
               <div className={styles.feedbackAvatar}>AL</div>
               <div className={styles.feedbackText}>
                 <div className={styles.feedbackName}>Ana López García</div>
-                <div className={styles.feedbackComment}>
-                  Buen progreso en diagnóstico electrónico. Seguir practicando con el equipo de medición.
-                </div>
+                <div className={styles.feedbackComment}>Buen progreso en diagnóstico electrónico. Seguir practicando con el equipo de medición.</div>
                 <div className={styles.feedbackDate}>Hace 3 días</div>
               </div>
             </div>
@@ -425,15 +363,12 @@ export function StudentDashboard() {
               <div className={styles.feedbackAvatar}>RF</div>
               <div className={styles.feedbackText}>
                 <div className={styles.feedbackName}>Roberto Fernández</div>
-                <div className={styles.feedbackComment}>
-                  Excelente trabajo en taller. Demuestra buena destreza manual.
-                </div>
+                <div className={styles.feedbackComment}>Excelente trabajo en taller. Demuestra buena destreza manual.</div>
                 <div className={styles.feedbackDate}>Hace 1 semana</div>
               </div>
             </div>
           </div>
 
-          {/* Upcoming Classes */}
           <div className={styles.rightCard}>
             <div className={styles.rightCardTitle}>Próximas Clases</div>
             {data.upcomingClasses.length > 0 ? (
@@ -459,10 +394,9 @@ export function StudentDashboard() {
         </div>
       </div>
 
-      {/* Achievements Row */}
       <div className={styles.achievementsRow}>
         <div className={styles.achievement}>
-          <div className={styles.achievementIcon}>🔥</div>
+          <div className={styles.achievementIcon}><Flame size={20} /></div>
           <div className={styles.achievementInfo}>
             <div className={styles.achievementTitle}>Racha de asistencia</div>
             <div className={styles.achievementSub}>
@@ -473,31 +407,25 @@ export function StudentDashboard() {
           </div>
         </div>
         <div className={styles.achievement}>
-          <div className={styles.achievementIcon}>📈</div>
+          <div className={styles.achievementIcon}><TrendingUp size={20} /></div>
           <div className={styles.achievementInfo}>
             <div className={styles.achievementTitle}>Mejora continua</div>
             <div className={styles.achievementSub}>
               {data.weeklyData.length >= 2 &&
-              (data.weeklyData[data.weeklyData.length - 1]?.weekAvg ?? 0) >
-                (data.weeklyData[0]?.weekAvg ?? 0)
-                ? `+${(
-                    (data.weeklyData[data.weeklyData.length - 1]?.weekAvg ?? 0) -
-                    (data.weeklyData[0]?.weekAvg ?? 0)
-                  ).toFixed(1)} pts desde semana 1`
+              (data.weeklyData[data.weeklyData.length - 1]?.weekAvg ?? 0) > (data.weeklyData[0]?.weekAvg ?? 0)
+                ? `+${((data.weeklyData[data.weeklyData.length - 1]?.weekAvg ?? 0) - (data.weeklyData[0]?.weekAvg ?? 0)).toFixed(1)} pts desde semana 1`
                 : "Sigue esforzándote"}
             </div>
           </div>
         </div>
         <div className={styles.achievement}>
-          <div className={styles.achievementIcon}>🏆</div>
+          <div className={styles.achievementIcon}><Award size={20} /></div>
           <div className={styles.achievementInfo}>
             <div className={styles.achievementTitle}>Mejor módulo</div>
             <div className={styles.achievementSub}>
               {data.moduleAvgs.length > 0
                 ? (() => {
-                    const best = data.moduleAvgs.reduce((a, b) =>
-                      (a.studentAvg ?? 0) > (b.studentAvg ?? 0) ? a : b
-                    );
+                    const best = data.moduleAvgs.reduce((a, b) => ((a.studentAvg ?? 0) > (b.studentAvg ?? 0) ? a : b));
                     return `${best.moduleName}: ${(best.studentAvg ?? 0).toFixed(1)}`;
                   })()
                 : "Sin datos aún"}

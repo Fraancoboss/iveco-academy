@@ -12,6 +12,17 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
+import {
+  BarChart3,
+  School,
+  Users,
+  TrendingUp,
+  FileText,
+  Settings,
+  Bell,
+  AlertTriangle,
+  ClipboardCheck,
+} from "lucide-react";
 import { DashboardLayout } from "../components/ui/DashboardLayout.js";
 import { KpiCard } from "../components/ui/KpiCard.js";
 import { ChartCard } from "../components/ui/ChartCard.js";
@@ -142,16 +153,16 @@ export function DirectorDashboard() {
     {
       label: "Panel Director",
       items: [
-        { icon: "📊", label: "Dashboard", to: "/director", active: true },
-        { icon: "🏫", label: "Programas", to: "#" },
-        { icon: "👥", label: "Alumnos", to: "#", badge: totalStudents },
-        { icon: "📈", label: "Reportes", to: "#" },
+        { icon: <BarChart3 size={16} />, label: "Dashboard", to: "/director", active: true },
+        { icon: <School size={16} />, label: "Programas", to: "#" },
+        { icon: <Users size={16} />, label: "Alumnos", to: "#", badge: totalStudents },
+        { icon: <TrendingUp size={16} />, label: "Reportes", to: "#" },
       ],
     },
     {
       label: "Ediciones",
       items: data.editions.map((e) => ({
-        icon: "📋",
+        icon: <FileText size={16} />,
         label: e.editionName,
         to: "#",
         badge: `${e.enrolledCount}/${e.capacity}`,
@@ -160,8 +171,8 @@ export function DirectorDashboard() {
     {
       label: "Gestión",
       items: [
-        { icon: "⚙️", label: "Configuración", to: "#" },
-        { icon: "🔔", label: "Alertas", to: "#", badge: data.atRiskStudents.length || undefined },
+        { icon: <Settings size={16} />, label: "Configuración", to: "#" },
+        { icon: <Bell size={16} />, label: "Alertas", to: "#", badge: data.atRiskStudents.length || undefined },
       ],
     },
   ];
@@ -194,20 +205,20 @@ export function DirectorDashboard() {
       {/* KPI Row */}
       <div className={styles.kpiRow}>
         <KpiCard
-          icon="👥"
+          icon={<Users size={18} />}
           label="Total Alumnos"
           value={String(totalStudents)}
           subtitle={`${data.editions.length} ediciones`}
         />
         <KpiCard
-          icon="📈"
+          icon={<TrendingUp size={18} />}
           label="Promedio General"
-          value={overallAvg > 0 ? overallAvg.toFixed(1) : "—"}
+          value={overallAvg > 0 ? overallAvg.toFixed(1) : "\u2014"}
           unit="/10"
           subtitle="Todas las ediciones"
         />
         <KpiCard
-          icon="⚠️"
+          icon={<AlertTriangle size={18} />}
           label="En Riesgo"
           value={String(data.atRiskStudents.length)}
           subtitle="Promedio < 5.0"
@@ -218,7 +229,7 @@ export function DirectorDashboard() {
           }
         />
         <KpiCard
-          icon="📝"
+          icon={<ClipboardCheck size={18} />}
           label="Eval. Pendientes"
           value={String(data.pendingEvaluations.length)}
           subtitle="Sin completar"
@@ -364,7 +375,7 @@ export function DirectorDashboard() {
                     <div className={styles.atRiskInfo}>
                       <div className={styles.atRiskName}>{s.studentName}</div>
                       <div className={styles.atRiskMeta}>
-                        {edName} · Asistencia: {s.attendancePct != null ? `${s.attendancePct.toFixed(0)}%` : "—"}
+                        {edName} · Asistencia: {s.attendancePct != null ? `${s.attendancePct.toFixed(0)}%` : "\u2014"}
                       </div>
                     </div>
                     <span className={styles.atRiskScore}>{s.overallAvg.toFixed(1)}</span>

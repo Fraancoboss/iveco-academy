@@ -1,3 +1,4 @@
+import { Bell, Mail, ChevronDown } from "lucide-react";
 import styles from "./TopBar.module.css";
 
 interface TopBarProps {
@@ -12,11 +13,11 @@ export function TopBar({ viewLabel, userName, userRole }: TopBarProps) {
       <div className={styles.viewLabel}>{viewLabel}</div>
       <div className={styles.actions}>
         <button className={styles.iconBtn} title="Notificaciones">
-          <span>&#128276;</span>
+          <Bell size={18} />
           <span className={styles.notifBadge}>3</span>
         </button>
         <button className={styles.iconBtn} title="Mensajes">
-          <span>&#9993;</span>
+          <Mail size={18} />
         </button>
         <div className={styles.user}>
           <div className={styles.avatar}>
@@ -26,7 +27,7 @@ export function TopBar({ viewLabel, userName, userRole }: TopBarProps) {
             <span className={styles.userName}>{userName}</span>
             <span className={styles.userRole}>{userRole}</span>
           </div>
-          <span className={styles.chevron}>&#9662;</span>
+          <ChevronDown size={14} className={styles.chevron} />
         </div>
       </div>
     </header>
