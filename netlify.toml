@@ -1,0 +1,20 @@
+[build]
+  command = "pnpm install --frozen-lockfile && pnpm --filter app build"
+  publish = "app/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  PNPM_VERSION = "9"
+
+# Proxy /api/* to the Railway API (update the URL after deploying Railway)
+[[redirects]]
+  from = "/api/*"
+  to = "https://REEMPLAZAR-CON-URL-DE-RAILWAY/api/:splat"
+  status = 200
+  force = true
+
+# SPA fallback — all routes serve index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
