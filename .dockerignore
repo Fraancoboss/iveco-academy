@@ -2,4 +2,6 @@
 node_modules
 */node_modules
 */dist
-app/
+app/src
+app/public
+app/dist
